@@ -76,6 +76,8 @@ if __name__ == '__main__':
     print(album_meta_gen(performer='The Performer', title='The Title Of Album'))
     print(album_meta_gen(quotes=True, performer='The Performer', title='The Title Of Album'))
 
+    print('___another tests___')
+
 
 
 
