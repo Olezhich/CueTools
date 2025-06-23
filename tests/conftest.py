@@ -15,8 +15,16 @@ f'''FILE "{filename}" {'WAVE' if filename.endswith('.flac') else ''}
 
 def album_meta_gen(quotes : bool=False, **kwargs : str | list[str]) -> list[str]:
     if not quotes:
-        return [f'{key.upper()} {', '.join(lst) if isinstance(lst, list) else lst}' for key, lst in kwargs.items()]
-    return [f'{key.upper()} {', '.join(f'"{i}"' for i in lst) if isinstance(lst, list) else f'"{lst}"'}' for key, lst in kwargs.items()]
+        return [f'{key.upper()} {", ".join(lst) if isinstance(lst, list) else lst}' for key, lst in kwargs.items()]
+    tags = []
+    for key, lst in kwargs.items():
+        s = key.upper() + ' '
+        if isinstance(lst, list):
+            s += ", ".join(f'"{i}"' for i in lst)
+        else:
+            s += f'"{lst}"'
+        tags.append(s)
+    return tags
 
 def album_rem_gen(quotes : bool=False, **kwargs : str | list[str]) -> list[str]:
     return [f'REM {i}' for i in album_meta_gen(quotes, **kwargs)]
@@ -75,6 +83,8 @@ if __name__ == '__main__':
 
     print(album_meta_gen(performer='The Performer', title='The Title Of Album'))
     print(album_meta_gen(quotes=True, performer='The Performer', title='The Title Of Album'))
+
+    print('___another tests___')
 
 
 
