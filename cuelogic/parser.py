@@ -46,7 +46,8 @@ def load(cue : str) -> AlbumData:
         elif line.startswith("PERFORMER") and current_track:
             current_track.set_performer(process_line(line, "PERFORMER")[0])
         elif line.startswith("INDEX") and current_track:
-            current_track.add_index((process_line(line, "INDEX")[0], process_line(line, "INDEX")[1]))
+            idx = process_line(line, "INDEX")[0].split()
+            current_track.add_index((idx[0],idx[1]))
     if current_track:
         album.add_track(current_track)
 
@@ -61,3 +62,4 @@ if __name__ == '__main__':
     print(process_line('REM DATE "1969"', 'REM DATE'))
     print(process_line('REM DATE 1969, 1975', 'REM DATE', many=True))
     print(process_line('REM DATE "1969", "1975"', 'REM DATE', many=True))
+    print(process_line('INDEX 01 00:00:00', 'INDEX', many=True))
