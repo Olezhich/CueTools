@@ -6,7 +6,9 @@ import shlex
 
 def extract_word(line : str, n : int) -> str | None:
     try:
-        return shlex.split(line)[n]
+        tokens = shlex.split(line)
+        print(tokens)
+        return tokens[n]
     except (ValueError, IndexError):
         return None
 
@@ -25,11 +27,15 @@ def load(cue : str) -> AlbumData:
         line = line.strip()
 
         if line.startswith("PERFORMER") and not current_track:
-            album.set_performer(extract_word(line, 1))
+            album.set_performer(process_line(line, "PERFORMER")[0])
         elif line.startswith("TITLE") and not current_track:
             album.set_title(process_line(line, "TITLE")[0])
         elif line.startswith("FILE"):
-            file_path = dir + process_line(line, "FILE")[0]
+            path = process_line(line, "FILE", many=True)[0]
+            last_idx = path.rfind(' ')
+            if '.' in path[:last_idx]:
+                path = path[:last_idx]
+            file_path = dir + path.strip('\'\"')
             current_file = file_path
         elif line.startswith('REM GENRE'):
             album.set_genre(process_line(line, "REM GENRE")[0])
@@ -39,7 +45,8 @@ def load(cue : str) -> AlbumData:
         elif line.startswith("TRACK"):
             if current_track:
                 album.add_track(current_track)
-            current_track = TrackData(track=process_line(line, "TRACK")[0], link=current_file)
+            track = process_line(line, "TRACK", many=True)[0].split()[0]
+            current_track = TrackData(track=track, link=current_file)
 
         elif line.startswith("TITLE") and current_track:
             current_track.set_title(process_line(line, "TITLE")[0])
@@ -63,3 +70,6 @@ if __name__ == '__main__':
     print(process_line('REM DATE 1969, 1975', 'REM DATE', many=True))
     print(process_line('REM DATE "1969", "1975"', 'REM DATE', many=True))
     print(process_line('INDEX 01 00:00:00', 'INDEX', many=True))
+    print(process_line('FILE "06 - Song 6.flac" WAVE', 'FILE'))
+    print(process_line('FILE 06 - Song 6.flac WAVE', 'FILE'))
+
