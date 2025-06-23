@@ -3,9 +3,6 @@ import os.path
 from cuelogic import AlbumData, TrackData
 
 import shlex
-import re
-
-line_pattern = re.compile(r'"([^"]+)"|([^,"]+)')
 
 def extract_word(line : str, n : int) -> str | None:
     try:
