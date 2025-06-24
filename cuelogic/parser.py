@@ -1,4 +1,5 @@
 import os.path
+from collections.abc import Iterator
 
 from cuelogic import AlbumData, TrackData
 
@@ -17,13 +18,18 @@ def process_line(line : str, case : str, many : bool=False) -> list[str]:
     tokens = line.split(',') if many else [line]
     return [i.strip().strip('\"\'') for i in tokens]
 
-def load(cue : str) -> AlbumData:
+def str_iter(s : str) -> Iterator[str]:
+    for line in s.splitlines():
+        yield line
+
+
+def load_f_iter(cue : Iterator[str]) -> AlbumData:
+    """loading an object from an iterator"""
     album = AlbumData()
-    dir = '' #os.path.dirname(path)
     current_track = None
     current_file = None
 
-    for line in cue.splitlines():
+    for line in cue:
         line = line.strip()
 
         if line.startswith("PERFORMER") and not current_track:
@@ -35,8 +41,7 @@ def load(cue : str) -> AlbumData:
             last_idx = path.rfind(' ')
             if '.' in path[:last_idx]:
                 path = path[:last_idx]
-            file_path = dir + path.strip('\'\"')
-            current_file = file_path
+            current_file = path.strip('\'\"')
         elif line.startswith('REM GENRE'):
             album.set_genre(process_line(line, "REM GENRE")[0])
         elif line.startswith('REM DATE'):
@@ -54,14 +59,16 @@ def load(cue : str) -> AlbumData:
             current_track.set_performer(process_line(line, "PERFORMER")[0])
         elif line.startswith("INDEX") and current_track:
             idx = process_line(line, "INDEX")[0].split()
-            current_track.add_index((idx[0],idx[1]))
+            current_track.add_index((idx[0], idx[1]))
     if current_track:
         album.add_track(current_track)
 
-    #with open(path, 'r') as f:
-
-
     return album
+
+def loads(cue : str) -> AlbumData:
+    """loading an object from a string, similar to the function json.loads()"""
+    return load_f_iter(str_iter(cue))
+
 
 if __name__ == '__main__':
     print('___process_line_tests___')
