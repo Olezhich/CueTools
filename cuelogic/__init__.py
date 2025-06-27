@@ -1,2 +1,2 @@
 from .models import TrackData, AlbumData
-from .parser import loads
+from .parser import loads, dumps

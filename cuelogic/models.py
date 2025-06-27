@@ -4,7 +4,7 @@ from typing import Optional
 @dataclass(slots=True)
 class TrackData:
     index : dict[str, str] = field(default_factory = lambda: {'01' : '00:00:00'})
-    track : Optional[str] = None
+    track : Optional[str] = None #str = '01'
     title : Optional[str] = None
     performer : Optional[str] = None
     link: Optional[str] = None
