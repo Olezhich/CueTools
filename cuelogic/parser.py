@@ -90,7 +90,7 @@ def dumps(cue : AlbumData, quotes : bool=False, tab : int=2) -> str:
             current_file = track.link
             album.append(f'FILE "{current_file}" WAVE')
 
-        album.append(f'{" "*tab}TRACK {track.track if track.track else '01'} AUDIO')
+        album.append(f'{" "*tab}TRACK {track.track if track.track else "0" + "1"} AUDIO')
         if track.title:
             album.append(f'{" "*tab*2}TITLE "{track.title}"')
         if track.performer:
