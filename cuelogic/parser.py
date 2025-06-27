@@ -1,9 +1,15 @@
 import os.path
 from collections.abc import Iterator
+from dataclasses import fields
+from shlex import quote
+from typing import IO
 
 from cuelogic import AlbumData, TrackData
+from cuelogic.models import RemData
 
 import shlex
+
+
 
 def extract_word(line : str, n : int) -> str | None:
     try:
@@ -65,9 +71,45 @@ def load_f_iter(cue : Iterator[str]) -> AlbumData:
 
     return album
 
+def dumps_line_quotes(arg : str, quotes : bool) -> str:
+    q = '"' if  quotes else ''
+    return f'{q}{arg}{q}'
+
+def dumps(cue : AlbumData, quotes : bool=False, tab : int=2) -> str:
+    """dumping an object to a string, similar to the json.dumps()"""
+    album = []
+    for field in fields(cue.rem):
+        album.append(f'REM {field.name.upper()} {dumps_line_quotes(getattr(cue.rem, field.name), quotes)}')
+
+    album.append(f'PERFORMER {dumps_line_quotes(cue.performer, quotes)}')
+    album.append(f'TITLE {dumps_line_quotes(cue.title, quotes)}')
+
+    current_file = None
+    for track in cue.tracks:
+        if track.link != current_file:
+            current_file = track.link
+            album.append(f'FILE "{current_file}" WAVE')
+
+        album.append(f'{" "*tab}TRACK {track.track if track.track else '01'} AUDIO')
+        if track.title:
+            album.append(f'{" "*tab*2}TITLE "{track.title}"')
+        if track.performer:
+            album.append(f'{" "*tab*2}PERFORMER "{track.performer}"')
+        if track.index:
+            for idx in sorted(track.index.keys()):
+                album.append(f'{" "*tab*2}INDEX {idx} {track.index[idx]}')
+
+    return '\n'.join(album)
+
+
 def loads(cue : str) -> AlbumData:
     """loading an object from a string, similar to the function json.loads()"""
     return load_f_iter(str_iter(cue))
+
+def load(fp : IO[str]) -> AlbumData:
+    """loading an object from a file pointer, similar to the function json.load()"""
+    return load_f_iter(fp)
+
 
 
 if __name__ == '__main__':
@@ -79,4 +121,13 @@ if __name__ == '__main__':
     print(process_line('INDEX 01 00:00:00', 'INDEX', many=True))
     print(process_line('FILE "06 - Song 6.flac" WAVE', 'FILE'))
     print(process_line('FILE 06 - Song 6.flac WAVE', 'FILE'))
+
+    print('___dumps tests___')
+    print(dumps(AlbumData(performer='The Performer',
+                          title='The Title',
+                          rem=RemData(genre='Hard Rock', date='1969'),
+                          tracks=[TrackData(title='Song1', link='song1.flac'),
+                                  TrackData(title='Song2', link='song2.flac'),
+                                  TrackData(title='Song3', link='songs.flac'),
+                                  TrackData(title='Song4', link='songs.flac')]), quotes=True))
 
