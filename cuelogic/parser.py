@@ -1,7 +1,5 @@
-import os.path
 from collections.abc import Iterator
 from dataclasses import fields
-from shlex import quote
 from typing import IO
 
 from cuelogic import AlbumData, TrackData
