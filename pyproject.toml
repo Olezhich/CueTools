@@ -1,5 +1,5 @@
 [project]
-name = "cuelogic"
+name = "cuelogiclib"
 version = "0.1.2"
 description = "Lightweight CUE sheet toolkit for Python"
 authors = [
