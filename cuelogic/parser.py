@@ -1,13 +1,11 @@
 from collections.abc import Iterator
 from dataclasses import fields
-from typing import IO
+from typing import IO, Generator
 
 from cuelogic import AlbumData, TrackData
 from cuelogic.models import RemData
 
 import shlex
-
-
 
 def extract_word(line : str, n : int) -> str | None:
     try:
@@ -73,31 +71,27 @@ def dumps_line_quotes(arg : str, quotes : bool) -> str:
     q = '"' if  quotes else ''
     return f'{q}{arg}{q}'
 
-def dumps(cue : AlbumData, quotes : bool=False, tab : int=2) -> str:
-    """dumping an object to a string, similar to the json.dumps()"""
-    album = []
+def dump_gen(cue : AlbumData, quotes : bool=False, tab : int=2) -> Generator[str]:
     for field in fields(cue.rem):
-        album.append(f'REM {field.name.upper()} {dumps_line_quotes(getattr(cue.rem, field.name), quotes)}')
+        yield f'REM {field.name.upper()} {dumps_line_quotes(getattr(cue.rem, field.name), quotes)}'
 
-    album.append(f'PERFORMER {dumps_line_quotes(cue.performer, quotes)}')
-    album.append(f'TITLE {dumps_line_quotes(cue.title, quotes)}')
+    yield f'PERFORMER {dumps_line_quotes(cue.performer, quotes)}'
+    yield f'TITLE {dumps_line_quotes(cue.title, quotes)}'
 
     current_file = None
     for track in cue.tracks:
         if track.link != current_file:
             current_file = track.link
-            album.append(f'FILE "{current_file}" WAVE')
+            yield f'FILE "{current_file}" WAVE'
 
-        album.append(f'{" "*tab}TRACK {track.track if track.track else "0" + "1"} AUDIO')
+        yield f'{" "*tab}TRACK {track.track if track.track else "0" + "1"} AUDIO'
         if track.title:
-            album.append(f'{" "*tab*2}TITLE "{track.title}"')
+            yield f'{" "*tab*2}TITLE "{track.title}"'
         if track.performer:
-            album.append(f'{" "*tab*2}PERFORMER "{track.performer}"')
+            yield f'{" "*tab*2}PERFORMER "{track.performer}"'
         if track.index:
             for idx in sorted(track.index.keys()):
-                album.append(f'{" "*tab*2}INDEX {idx} {track.index[idx]}')
-
-    return '\n'.join(album)
+                yield f'{" "*tab*2}INDEX {idx} {track.index[idx]}'
 
 
 def loads(cue : str) -> AlbumData:
@@ -108,7 +102,16 @@ def load(fp : IO[str]) -> AlbumData:
     """loading an object from a file pointer, similar to the function json.load()"""
     return load_f_iter(fp)
 
+def dumps(cue : AlbumData, quotes : bool=False, tab : int=2) -> str:
+    """dumping an object to a string, similar to the json.dumps()"""
+    album = [line for line in dump_gen(cue, quotes, tab)]
+    return '\n'.join(album)
 
+def dump(cue : AlbumData, fp : IO[str], quotes : bool=False, tab : int=2) -> None:
+    """dumping an object to a file pointer, similar to the json.dump()"""
+    for line in dump_gen(cue, quotes, tab):
+        fp.write(line)
+        fp.write('\n')
 
 
 
