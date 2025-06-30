@@ -71,7 +71,7 @@ def dumps_line_quotes(arg : str, quotes : bool) -> str:
     q = '"' if  quotes else ''
     return f'{q}{arg}{q}'
 
-def dump_gen(cue : AlbumData, quotes : bool=False, tab : int=2) -> Generator[str]:
+def dump_gen(cue : AlbumData, quotes : bool=False, tab : int=2) -> Generator[str, None, None]:
     for field in fields(cue.rem):
         yield f'REM {field.name.upper()} {dumps_line_quotes(getattr(cue.rem, field.name), quotes)}'
 
