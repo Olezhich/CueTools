@@ -1,8 +1,8 @@
 # CueTools
 
-[![PyPI version](https://img.shields.io/pypi/v/cuelogic )](https://pypi.org/project/cuetools/ )
+[![PyPI version](https://img.shields.io/pypi/v/cuetools )](https://pypi.org/project/cuetools/ )
 [![License](https://img.shields.io/github/license/Olezhich/CueLogic )](https://github.com/Olezhich/CueLogic/blob/main/LICENSE )
-[![Python](https://img.shields.io/badge/python-3.12%2B-blue)](https://python.org)  
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://python.org)  
 
 > **Lightweight CUE sheet toolkit for Python.**  
 Parse and generate `.cue` files programmatically.
@@ -19,7 +19,30 @@ Parse and generate `.cue` files programmatically.
 
 ---
 
-## QuickStart
+## 🚀 QuickStart
+**Installation of the library**
 
 ```bash
 pip install cuetools
+```
+**Using of the library**
+```python
+import cuetools
+
+cue_string = """
+FILE "track01.flac" WAVE
+  TRACK 01 AUDIO
+    TITLE "Intro"
+    PERFORMER "Artist"
+    INDEX 01 00:00:00
+"""
+
+cue_sheet = loads(cue_data) 
+#cue_sheet is instance of AlbumData dataclass with parsed cue_data
+
+track = cuesheet.tracks[0]
+#track is instance of TrackData dataclass with parsed track data
+
+print(track.link)      # Result: track01.wav
+print(track.title)     # Result: Intro
+print(track.performer) # Result: Artist
