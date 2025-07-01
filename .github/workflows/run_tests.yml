@@ -25,4 +25,4 @@ jobs:
 
       - name: Run tests
         run: |
-          poetry run pytest --cov=cuelogic tests/
+          poetry run pytest --cov=cuetools tests/
