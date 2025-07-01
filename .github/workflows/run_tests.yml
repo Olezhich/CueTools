@@ -23,6 +23,11 @@ jobs:
         run: |
           poetry install --no-interaction --with dev
 
-      - name: Run tests
+      - name: Run tests and generate coverage report
         run: |
           poetry run pytest --cov=cuetools tests/
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
