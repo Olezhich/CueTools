@@ -3,7 +3,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/cuetools )](https://pypi.org/project/cuetools/ )
 [![License](https://img.shields.io/github/license/Olezhich/CueLogic )](https://github.com/Olezhich/CueLogic/blob/main/LICENSE )
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://python.org)  
-[![Coverage Status](https://coveralls.io/repos/github/Olezhich/CueTools/badge.svg?branch=main)]( https://coveralls.io/github/Olezhich/CueTools?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/Olezhich/CueTools/badge.svg?branch=dev)]( https://coveralls.io/github/Olezhich/CueTools?branch=dev)
 
 > **Lightweight CUE sheet toolkit for Python.**  
 Parse and generate `.cue` files programmatically.
