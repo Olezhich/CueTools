@@ -1,5 +1,5 @@
 [project]
-name = "cuelogiclib"
+name = "cuetools"
 version = "0.1.2"
 description = "Lightweight CUE sheet toolkit for Python"
 authors = [
@@ -12,6 +12,10 @@ keywords = ["cue", "audio", "parser"]
 
 requires-python = ">=3.10"
 dependencies = [
+]
+
+packages = [
+    { include = "cuetools" }
 ]
 
 [tool.poetry]

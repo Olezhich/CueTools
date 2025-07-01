@@ -2,8 +2,8 @@ from curses.ascii import isdigit
 from shlex import quote
 
 import pytest
-from cuelogic import AlbumData, TrackData
-from cuelogic.models import RemData
+from cuetools import AlbumData, TrackData
+from cuetools.models import RemData
 
 TAB = 2
 

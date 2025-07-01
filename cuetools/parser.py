@@ -2,8 +2,8 @@ from collections.abc import Iterator
 from dataclasses import fields
 from typing import IO, Generator
 
-from cuelogic import AlbumData, TrackData
-from cuelogic.models import RemData
+from cuetools import AlbumData, TrackData
+from cuetools.models import RemData
 
 import shlex
 

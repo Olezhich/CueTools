@@ -1,7 +1,8 @@
-# CueLogic
+# CueTools
 
-[![PyPI version](https://img.shields.io/pypi/v/cuelogic )](https://pypi.org/project/cuelogic/ )
+[![PyPI version](https://img.shields.io/pypi/v/cuelogic )](https://pypi.org/project/cuetools/ )
 [![License](https://img.shields.io/github/license/Olezhich/CueLogic )](https://github.com/Olezhich/CueLogic/blob/main/LICENSE )
+[![Python](https://img.shields.io/badge/python-3.12%2B-blue)](https://python.org)  
 
 > **Lightweight CUE sheet toolkit for Python.**  
 Parse and generate `.cue` files programmatically.
@@ -9,7 +10,7 @@ Parse and generate `.cue` files programmatically.
 ---
 
 ## Features
-g
+
 - Parse `.cue` files into structured Python objects
 - Generate `.cue` file content from data
 - Simple and intuitive API
@@ -18,7 +19,7 @@ g
 
 ---
 
-## Instalation
+## QuickStart
 
 ```bash
-pip install cuelogic
+pip install cuetools
