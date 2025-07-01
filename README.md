@@ -4,13 +4,14 @@
 [![License](https://img.shields.io/github/license/Olezhich/CueLogic )](https://github.com/Olezhich/CueLogic/blob/main/LICENSE )
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://python.org)  
 [![Coverage Status](https://coveralls.io/repos/github/Olezhich/CueTools/badge.svg?branch=dev)]( https://coveralls.io/github/Olezhich/CueTools?branch=dev)
+[![Build Status](https://github.com/Olezhich/CueLogic/workflows/Run%20Tests%20on%20PR/badge.svg )](https://github.com/Olezhich/CueLogic/actions )
 
 > **Lightweight CUE sheet toolkit for Python.**  
 Parse and generate `.cue` files programmatically.
 
 ---
 
-## Features
+## ✨ Features
 
 - Parse `.cue` files into structured Python objects
 - Generate `.cue` file content from data
