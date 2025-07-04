@@ -28,6 +28,8 @@ class TrackData:
 class RemData:
     genre : Optional[str] = None
     date : Optional[str] = None
+    replaygain_album_gain : Optional[str] = None
+    replaygain_album_peak : Optional[str] = None
 
 @dataclass(slots=True)
 class AlbumData:
@@ -50,3 +52,9 @@ class AlbumData:
 
     def set_date(self, date : str) -> None:
         self.rem.date = date
+
+    def set_gain(self, gain : str) -> None:
+        self.rem.replaygain_album_gain = gain
+
+    def set_peak(self, peak : str) -> None:
+        self.rem.replaygain_album_peak = peak
