@@ -94,6 +94,15 @@ def obj_sample_one_file_many_tracks() -> AlbumData:
         album.add_track(TrackData(track=f'0{i}', title=f'song_name', link='The Title Of Album.flac'))
     return album
 
+@pytest.fixture()
+def cue_sample_rem():
+    album = album_rem_gen(genre='Hard Rock', date='1969', replaygain_album_gain='-4.10 db', replaygain_album_peak='-0.04 db')
+    return '\n'.join(album)
+
+@pytest.fixture()
+def obj_sample_rem() -> AlbumData:
+    album = AlbumData(rem=RemData(genre='Hard Rock', date='1969', replaygain_album_gain='-4.10 db', replaygain_album_peak='-0.04 db'))
+    return album
 
 if __name__ == '__main__':
     print('___album rem tests___')

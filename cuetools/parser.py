@@ -44,10 +44,15 @@ def load_f_iter(cue : Iterator[str]) -> AlbumData:
             if '.' in path[:last_idx]:
                 path = path[:last_idx]
             current_file = path.strip('\'\"')
+
         elif line.startswith('REM GENRE'):
             album.set_genre(process_line(line, "REM GENRE")[0])
         elif line.startswith('REM DATE'):
             album.set_date(process_line(line, "REM DATE")[0])
+        elif line.startswith('REM REPLAYGAIN_ALBUM_GAIN'):
+            album.set_gain(process_line(line, "REM REPLAYGAIN_ALBUM_GAIN")[0])
+        elif line.startswith('REM REPLAYGAIN_ALBUM_PEAK'):
+            album.set_peak(process_line(line, "REM REPLAYGAIN_ALBUM_PEAK")[0])
 
         elif line.startswith("TRACK"):
             if current_track:
@@ -69,11 +74,12 @@ def load_f_iter(cue : Iterator[str]) -> AlbumData:
 
 def dumps_line_quotes(arg : str, quotes : bool) -> str:
     q = '"' if  quotes else ''
-    return f'{q}{arg}{q}'
+    return f'{q}{arg if arg else ""}{q}'
 
-def dump_gen(cue : AlbumData, quotes : bool=False, tab : int=2) -> Generator[str, None, None]:
+def dump_gen(cue : AlbumData, quotes : bool=False, tab : int=2, rem_dump_all : bool=False) -> Generator[str, None, None]:
     for field in fields(cue.rem):
-        yield f'REM {field.name.upper()} {dumps_line_quotes(getattr(cue.rem, field.name), quotes)}'
+        if (attr := getattr(cue.rem, field.name)) or rem_dump_all:
+            yield f'REM {field.name.upper()} {dumps_line_quotes(attr, quotes)}'
 
     yield f'PERFORMER {dumps_line_quotes(cue.performer, quotes)}'
     yield f'TITLE {dumps_line_quotes(cue.title, quotes)}'
@@ -102,9 +108,9 @@ def load(fp : IO[str]) -> AlbumData:
     """loading an object from a file pointer, similar to the function json.load()"""
     return load_f_iter(fp)
 
-def dumps(cue : AlbumData, quotes : bool=False, tab : int=2) -> str:
+def dumps(cue : AlbumData, quotes : bool=False, tab : int=2, rem_dump_all : bool=False) -> str:
     """dumping an object to a string, similar to the json.dumps()"""
-    album = [line for line in dump_gen(cue, quotes, tab)]
+    album = [line for line in dump_gen(cue, quotes, tab, rem_dump_all)]
     return '\n'.join(album)
 
 def dump(cue : AlbumData, fp : IO[str], quotes : bool=False, tab : int=2) -> None:
@@ -115,22 +121,22 @@ def dump(cue : AlbumData, fp : IO[str], quotes : bool=False, tab : int=2) -> Non
 
 
 
-if __name__ == '__main__':
-    print('___process_line_tests___')
-    print(process_line('REM DATE 1969', 'REM DATE'))
-    print(process_line('REM DATE "1969"', 'REM DATE'))
-    print(process_line('REM DATE 1969, 1975', 'REM DATE', many=True))
-    print(process_line('REM DATE "1969", "1975"', 'REM DATE', many=True))
-    print(process_line('INDEX 01 00:00:00', 'INDEX', many=True))
-    print(process_line('FILE "06 - Song 6.flac" WAVE', 'FILE'))
-    print(process_line('FILE 06 - Song 6.flac WAVE', 'FILE'))
-
-    print('___dumps tests___')
-    print(dumps(AlbumData(performer='The Performer',
-                          title='The Title',
-                          rem=RemData(genre='Hard Rock', date='1969'),
-                          tracks=[TrackData(title='Song1', link='song1.flac'),
-                                  TrackData(title='Song2', link='song2.flac'),
-                                  TrackData(title='Song3', link='songs.flac'),
-                                  TrackData(title='Song4', link='songs.flac')]), quotes=True))
+# if __name__ == '__main__':
+#     print('___process_line_tests___')
+#     print(process_line('REM DATE 1969', 'REM DATE'))
+#     print(process_line('REM DATE "1969"', 'REM DATE'))
+#     print(process_line('REM DATE 1969, 1975', 'REM DATE', many=True))
+#     print(process_line('REM DATE "1969", "1975"', 'REM DATE', many=True))
+#     print(process_line('INDEX 01 00:00:00', 'INDEX', many=True))
+#     print(process_line('FILE "06 - Song 6.flac" WAVE', 'FILE'))
+#     print(process_line('FILE 06 - Song 6.flac WAVE', 'FILE'))
+#
+#     print('___dumps tests___')
+#     print(dumps(AlbumData(performer='The Performer',
+#                           title='The Title',
+#                           rem=RemData(genre='Hard Rock', date='1969', replaygain_album_peak='-4.10 dB'),
+#                           tracks=[TrackData(title='Song1', link='song1.flac'),
+#                                   TrackData(title='Song2', link='song2.flac'),
+#                                   TrackData(title='Song3', link='songs.flac'),
+#                                   TrackData(title='Song4', link='songs.flac')]), quotes=True, rem_dump_all=False))
 

@@ -37,3 +37,8 @@ def test_dump_one_track_one_file(cue_sample_one_file_one_track_no_quotes,
     target = cue_sample_one_file_one_track_rem_meta_quotes
     res = cuetools.dumps(obj_sample_one_file_one_track, quotes=True)
     assert res == target, 'dumping: one_file_one_track_rem_meta_quotes'
+
+def test_load_rem(obj_sample_rem, cue_sample_rem):
+    target = obj_sample_rem
+    res = cuetools.loads(cue_sample_rem)
+    assert res == target, 'loading: rem'
