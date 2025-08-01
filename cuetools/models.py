@@ -1,13 +1,22 @@
 from dataclasses import dataclass, field
-from typing import Optional
 
 @dataclass(slots=True)
 class TrackData:
+    """
+    Contains metadata of one track in cue sheet
+
+    :ivar index: The index of track, corresponds to the line like *'INDEX 01 00:00:00'*
+    :ivar track: Track number string, corresponds to rhe line like *'TRACK 01 AUDIO'*
+    :ivar title: Track title
+    :ivar performer: Track performer
+    :ivar link: Path to the audio file with this track (to flac, ape or etc.) relative to the cue sheet file
+    """
+
     index : dict[str, str] = field(default_factory = lambda: {'01' : '00:00:00'})
-    track : Optional[str] = None #str = '01'
-    title : Optional[str] = None
-    performer : Optional[str] = None
-    link: Optional[str] = None
+    track : str | None = None
+    title : str | None = None
+    performer : str | None = None
+    link: str | None = None
 
     def add_index(self, index : tuple[str, str]) -> None:
         self.index[index[0]] = index[1]
@@ -26,15 +35,33 @@ class TrackData:
 
 @dataclass(slots=True)
 class RemData:
-    genre : Optional[str] = None
-    date : Optional[str] = None
-    replaygain_album_gain : Optional[str] = None
-    replaygain_album_peak : Optional[str] = None
+    """
+    Contains comment fields of cue sheet, corresponds to the *'REM'* lines
+
+    :ivar genre: Album genre
+    :ivar date: Album release date
+    :ivar replaygain_album_gain: Album replay gain in db
+    :ivar replaygain_album_peak: Album peak value in db
+    """
+
+    genre : str | None = None
+    date : str | None = None
+    replaygain_album_gain : str | None = None
+    replaygain_album_peak : str | None = None
 
 @dataclass(slots=True)
 class AlbumData:
-    performer : Optional[str] = None
-    title : Optional[str] = None
+    """
+    Contains metadata of whole album in cue sheet
+
+    :ivar performer: Album performer
+    :ivar title: Album title
+    :ivar rem: Album additional rem meta
+    :ivar tracks: Tracks list of this album
+    """
+
+    performer : str | None = None
+    title : str | None = None
     rem : RemData = field(default_factory=RemData)
     tracks : list[TrackData] = field(default_factory=list[TrackData])
 
