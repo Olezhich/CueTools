@@ -1,6 +1,6 @@
 [project]
 name = "cuetools"
-version = "0.1.4"
+version = "0.1.5"
 description = "Lightweight CUE sheet toolkit for Python"
 authors = [
     {name = "Olezhich"}

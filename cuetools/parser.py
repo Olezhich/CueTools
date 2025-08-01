@@ -3,7 +3,7 @@ from dataclasses import fields
 from typing import IO, Generator
 
 from cuetools import AlbumData, TrackData
-from cuetools.models import RemData
+
 
 import shlex
 
@@ -113,30 +113,8 @@ def dumps(cue : AlbumData, quotes : bool=False, tab : int=2, rem_dump_all : bool
     album = [line for line in dump_gen(cue, quotes, tab, rem_dump_all)]
     return '\n'.join(album)
 
-def dump(cue : AlbumData, fp : IO[str], quotes : bool=False, tab : int=2) -> None:
+def dump(cue : AlbumData, fp : IO[str], quotes : bool=False, tab : int=2, rem_dump_all : bool=False) -> None:
     """dumping an object to a file pointer, similar to the json.dump()"""
-    for line in dump_gen(cue, quotes, tab):
+    for line in dump_gen(cue, quotes, tab, rem_dump_all):
         fp.write(line)
         fp.write('\n')
-
-
-
-# if __name__ == '__main__':
-#     print('___process_line_tests___')
-#     print(process_line('REM DATE 1969', 'REM DATE'))
-#     print(process_line('REM DATE "1969"', 'REM DATE'))
-#     print(process_line('REM DATE 1969, 1975', 'REM DATE', many=True))
-#     print(process_line('REM DATE "1969", "1975"', 'REM DATE', many=True))
-#     print(process_line('INDEX 01 00:00:00', 'INDEX', many=True))
-#     print(process_line('FILE "06 - Song 6.flac" WAVE', 'FILE'))
-#     print(process_line('FILE 06 - Song 6.flac WAVE', 'FILE'))
-#
-#     print('___dumps tests___')
-#     print(dumps(AlbumData(performer='The Performer',
-#                           title='The Title',
-#                           rem=RemData(genre='Hard Rock', date='1969', replaygain_album_peak='-4.10 dB'),
-#                           tracks=[TrackData(title='Song1', link='song1.flac'),
-#                                   TrackData(title='Song2', link='song2.flac'),
-#                                   TrackData(title='Song3', link='songs.flac'),
-#                                   TrackData(title='Song4', link='songs.flac')]), quotes=True, rem_dump_all=False))
-
