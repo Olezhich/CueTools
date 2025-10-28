@@ -6,7 +6,7 @@ from cuetools.cls import FrameTimeCls
 
 
 class TrackData(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
+    model_config = ConfigDict(arbitrary_types_allowed=True, validate_assignment=True)
     file: Path | None = Field(
         default=None,
         description='Path to the audio file with this track (to flac, ape or etc.) relative to the cue sheet file',
@@ -28,14 +28,26 @@ class TrackData(BaseModel):
 
 
 class RemData(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
     genre: TitleCaseStr | None = Field(default=None, description='Album genre')
-    date : int | None = Field(default=None, description='Album release date')
-    replaygain_album_gain: ReplayGainGain | None = Field(default=None, description='Album replay gain, value format [-]a.bb dB')
-    replaygain_album_peak: ReplayGainPeak | None = Field(default=None, description='Album peak, value format c.dddddd')
+    date: int | None = Field(default=None, description='Album release date')
+    replaygain_album_gain: ReplayGainGain | None = Field(
+        default=None, description='Album replay gain, value format [-]a.bb dB'
+    )
+    replaygain_album_peak: ReplayGainPeak | None = Field(
+        default=None, description='Album peak, value format c.dddddd'
+    )
+
 
 class AlbumData(BaseModel):
-    performer: TitleCaseStr | None = Field(default=None, description="Album performer")
-    title: TitleCaseStr | None = Field(default=None, description="Album title")
-    rem: RemData = Field(default_factory=RemData, description='Album additional rem meta')
-    tracks : list[TrackData] = Field(default_factory=list[TrackData], description='Track list of this album')
-    
+    model_config = ConfigDict(validate_assignment=True)
+    performer: TitleCaseStr | None = Field(default=None, description='Album performer')
+    title: TitleCaseStr | None = Field(default=None, description='Album title')
+    rem: RemData = Field(
+        default_factory=RemData, description='Album additional rem meta'
+    )
+    tracks: list[TrackData] = Field(
+        default_factory=list[TrackData], description='Track list of this album'
+    )
+    def add_track(self, track : TrackData) -> None:
+        self.tracks.append(track)

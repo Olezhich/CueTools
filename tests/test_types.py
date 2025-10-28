@@ -1,20 +1,7 @@
-from pathlib import Path
-
 from pydantic import ValidationError
 import pytest
 from cuetools import TrackData
 from cuetools.models import RemData
-
-
-def test_TrackData():
-    album = TrackData(
-        file=Path('/music/album.flac'),
-        title='Album Title',
-        performer='The Performer',
-        index00='00:00:00',  # type: ignore
-        index01=50,  # type: ignore
-    )
-    print(album)
 
 
 def test_FrameTime():
@@ -52,3 +39,19 @@ def test_ReplayGain_gain():
 
     with pytest.raises(ValidationError):
         RemData(replaygain_album_gain='0.824654')  # type: ignore
+
+
+def test_ReplayGain_peak():
+    rem = RemData(replaygain_album_peak='0.987654')  # type: ignore
+    assert rem.replaygain_album_peak == 0.987654, (
+        'using string to ReplayGain peak cast, >0 case'
+    )
+
+    with pytest.raises(ValidationError):
+        RemData(replaygain_album_peak='0.0023')  # type: ignore
+
+    with pytest.raises(ValidationError):
+        RemData(replaygain_album_peak='0.0001112')  # type: ignore
+
+    with pytest.raises(ValidationError):
+        RemData(replaygain_album_peak='-0.001122')  # type: ignore
