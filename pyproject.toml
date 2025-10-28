@@ -1,6 +1,6 @@
 [project]
 name = "cuetools"
-version = "0.1.5"
+version = "0.2.0"
 description = "Lightweight CUE sheet toolkit for Python"
 authors = [
     {name = "Olezhich"}
@@ -12,17 +12,32 @@ keywords = ["cue", "audio", "parser"]
 
 requires-python = ">=3.10"
 dependencies = [
+    "pydantic (>=2.12.3,<3.0.0)",
 ]
 
 packages = [
     { include = "cuetools" }
 ]
 
-[tool.poetry]
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.mypy]
+python_version = "3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests/"]
+addopts = ["--cov=cuetools",
+           "--log-cli-level=INFO"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
 pytest-cov = "^6.2.1"
+mypy = "^1.18.2"
+ruff = "^0.14.2"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

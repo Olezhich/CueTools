@@ -21,6 +21,14 @@ Parse and generate `.cue` files programmatically.
 
 ---
 
+## Cue Sheet specification
+
+- Main cue sheet specification
+[https://wiki.hydrogenaudio.org/index.php?title=Cue_sheet](https://wiki.hydrogenaudio.org/index.php?title=Cue_sheet)
+
+- Additioonal ReplayGain specification
+[https://wiki.hydrogenaudio.org/index.php?title=ReplayGain_1.0_specification](https://wiki.hydrogenaudio.org/index.php?title=ReplayGain_1.0_specification)
+
 ## 🚀 QuickStart
 **Installation of the library**
 
