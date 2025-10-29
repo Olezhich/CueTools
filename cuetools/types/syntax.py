@@ -1,7 +1,8 @@
-from enum import StrEnum
+from enum import Enum
 from cuetools.types.lex import Token, lex
 
-class States(StrEnum):
+
+class States(Enum):
     START = 'start'
     EXPECT_SPACE = 'expect_space'
     EXPECT_WORD = 'expect_word'

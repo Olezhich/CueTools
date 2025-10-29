@@ -25,4 +25,4 @@ def lex(title: str) -> Generator[Token, None, None]:
                 pos = match.end()
                 break
         if not matched:
-            raise ValueError("Impossible to obtain any token")
+            raise ValueError('Impossible to obtain any token')
