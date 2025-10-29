@@ -1,12 +1,16 @@
 from cuetools.cls import FrameTimeCls
 import re
 
+from cuetools.types.syntax import syntax
+
 PEAK_PATTERN = re.compile(r'^[01]\.\d{6}$')
 GAIN_PATTERN = re.compile(r'^-?\d{1,2}\.\d{2}\s*dB$')
 
 
 def validate_title_case(title: str) -> str:
-    return title
+    if syntax(title):
+        return title
+    raise ValueError("Expected Title Case string")
 
 
 def validate_frame_time(value: FrameTimeCls | str | int) -> FrameTimeCls:

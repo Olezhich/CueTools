@@ -1,7 +1,7 @@
 from pydantic import ValidationError
 import pytest
 from cuetools import TrackData
-from cuetools.models import RemData
+from cuetools.models import AlbumData, RemData
 
 
 def test_FrameTime():
@@ -55,3 +55,13 @@ def test_ReplayGain_peak():
 
     with pytest.raises(ValidationError):
         RemData(replaygain_album_peak='-0.001122')  # type: ignore
+
+def test_TitleCase():
+    album = AlbumData(title='The Title')
+    assert album.title == 'The Title', 'only 2 capital words'
+
+    with pytest.raises(ValidationError):
+        album.title = 'the Title'
+    
+    album.title = "Now You're Talkin'"
+    assert album.title == "Now You're Talkin'", 'capital words and apostrophe'
