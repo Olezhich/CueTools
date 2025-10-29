@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import BeforeValidator, AfterValidator, PlainSerializer
 
-from cuetools.validators import (
+from cuetools.types.validators import (
     validate_title_case,
     validate_frame_time,
     serialize_frame_time,
