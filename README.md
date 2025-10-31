@@ -47,10 +47,10 @@ FILE "track01.flac" WAVE
     INDEX 01 00:00:00
 """
 
-cue_sheet = loads(cue_data) 
-#cue_sheet is instance of AlbumData dataclass with parsed cue_data
+cue_sheet = cuetools.loads(cue_string) 
+#cue_sheet is instance of AlbumData dataclass with parsed cue_string
 
-track = cuesheet.tracks[0]
+track = cue_sheet.tracks[0]
 #track is instance of TrackData dataclass with parsed track data
 
 print(track.link)      # Result: track01.wav
