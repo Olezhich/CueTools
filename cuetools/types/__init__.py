@@ -1,17 +1,14 @@
 from typing import Annotated
 
-from pydantic import BeforeValidator, AfterValidator, PlainSerializer
+from pydantic import BeforeValidator, PlainSerializer
 
 from cuetools.types.validators import (
-    validate_title_case,
     validate_frame_time,
     serialize_frame_time,
     validate_replaygain_peak,
     validate_replaygain_gain,
 )
 from cuetools.cls import FrameTimeCls
-
-TitleCaseStr = Annotated[str, AfterValidator(validate_title_case)]
 
 FrameTime = Annotated[
     FrameTimeCls,
@@ -22,3 +19,4 @@ FrameTime = Annotated[
 ReplayGainPeak = Annotated[float, BeforeValidator(validate_replaygain_peak)]
 
 ReplayGainGain = Annotated[float, BeforeValidator(validate_replaygain_gain)]
+

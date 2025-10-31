@@ -1,11 +1,14 @@
 from collections.abc import Iterator
 from dataclasses import fields
+from pathlib import Path
 from typing import IO, Generator
 
 from cuetools import AlbumData, TrackData
 
 
 import shlex
+
+from cuetools.types.title_case import TitleCase
 
 def extract_word(line : str, n : int) -> str | None:
     try:
@@ -25,7 +28,7 @@ def str_iter(s : str) -> Iterator[str]:
         yield line
 
 
-def load_f_iter(cue : Iterator[str]) -> AlbumData:
+def load_f_iter(cue : Iterator[str], strict_title_case: bool = False) -> AlbumData:
     """loading an object from an iterator"""
     album = AlbumData()
     current_track = None
@@ -35,9 +38,17 @@ def load_f_iter(cue : Iterator[str]) -> AlbumData:
         line = line.strip()
 
         if line.startswith("PERFORMER") and not current_track:
-            album.set_performer(process_line(line, "PERFORMER")[0])
+            performer = process_line(line, "PERFORMER")[0]
+            if strict_title_case:
+                album.set_performer(TitleCase(performer))
+            else:
+                album.performer = performer
         elif line.startswith("TITLE") and not current_track:
-            album.set_title(process_line(line, "TITLE")[0])
+            title = process_line(line, "TITLE")[0]
+            if strict_title_case:
+                album.set_title(TitleCase(title))
+            else:
+                album.title = title
         elif line.startswith("FILE"):
             path = process_line(line, "FILE", many=True)[0]
             last_idx = path.rfind(' ')
@@ -46,27 +57,43 @@ def load_f_iter(cue : Iterator[str]) -> AlbumData:
             current_file = path.strip('\'\"')
 
         elif line.startswith('REM GENRE'):
-            album.set_genre(process_line(line, "REM GENRE")[0])
+            genre = process_line(line, "REM GENRE")[0]
+            if strict_title_case:
+                album.rem.set_genre(TitleCase(genre))
+            else:
+                album.rem.genre = genre
         elif line.startswith('REM DATE'):
-            album.set_date(process_line(line, "REM DATE")[0])
+            album.rem.date = int(process_line(line, "REM DATE")[0])
         elif line.startswith('REM REPLAYGAIN_ALBUM_GAIN'):
-            album.set_gain(process_line(line, "REM REPLAYGAIN_ALBUM_GAIN")[0])
+            album.rem.replaygain_album_gain = process_line(line, "REM REPLAYGAIN_ALBUM_GAIN")[0]
         elif line.startswith('REM REPLAYGAIN_ALBUM_PEAK'):
-            album.set_peak(process_line(line, "REM REPLAYGAIN_ALBUM_PEAK")[0])
+            album.rem.replaygain_album_peak = process_line(line, "REM REPLAYGAIN_ALBUM_PEAK")[0]
 
         elif line.startswith("TRACK"):
             if current_track:
                 album.add_track(current_track)
             track = process_line(line, "TRACK", many=True)[0].split()[0]
-            current_track = TrackData(track=track, link=current_file)
+            current_track = TrackData(track=int(track), file=Path(current_file) if current_file else None)
 
         elif line.startswith("TITLE") and current_track:
-            current_track.set_title(process_line(line, "TITLE")[0])
+            title = process_line(line, "TITLE")[0]
+            if strict_title_case:
+                current_track.set_title(TitleCase(title))
+            else:
+                current_track.title = title
         elif line.startswith("PERFORMER") and current_track:
-            current_track.set_performer(process_line(line, "PERFORMER")[0])
-        elif line.startswith("INDEX") and current_track:
-            idx = process_line(line, "INDEX")[0].split()
-            current_track.add_index((idx[0], idx[1]))
+            performer = process_line(line, "PERFORMER")[0]
+            if strict_title_case:
+                current_track.set_performer(TitleCase(performer))
+            else:
+                current_track.performer = performer
+        elif line.startswith("INDEX 00") and current_track:
+            idx = process_line(line, "INDEX 00")[0]
+            current_track.index00 = idx
+        elif line.startswith("INDEX 01") and current_track:
+            idx = process_line(line, "INDEX 01")[0]
+            current_track.index01 = idx
+        
     if current_track:
         album.add_track(current_track)
 
@@ -77,27 +104,30 @@ def dumps_line_quotes(arg : str, quotes : bool) -> str:
     return f'{q}{arg if arg else ""}{q}'
 
 def dump_gen(cue : AlbumData, quotes : bool=False, tab : int=2, rem_dump_all : bool=False) -> Generator[str, None, None]:
-    for field in fields(cue.rem):
-        if (attr := getattr(cue.rem, field.name)) or rem_dump_all:
-            yield f'REM {field.name.upper()} {dumps_line_quotes(attr, quotes)}'
+    for field in cue.rem.model_dump().keys():
+        if (attr := getattr(cue.rem, field)) or rem_dump_all:
+            yield f'REM {field.upper()} {dumps_line_quotes(attr, quotes)}'
 
-    yield f'PERFORMER {dumps_line_quotes(cue.performer, quotes)}'
-    yield f'TITLE {dumps_line_quotes(cue.title, quotes)}'
+    if cue.performer:
+        yield f'PERFORMER {dumps_line_quotes(cue.performer, quotes)}'
+    if cue.title:
+        yield f'TITLE {dumps_line_quotes(cue.title, quotes)}'
 
     current_file = None
     for track in cue.tracks:
-        if track.link != current_file:
-            current_file = track.link
-            yield f'FILE "{current_file}" WAVE'
+        if track.file != current_file:
+            current_file = track.file
+            yield f'FILE "{str(current_file)}" WAVE'
 
-        yield f'{" "*tab}TRACK {track.track if track.track else "0" + "1"} AUDIO'
+        yield f'{" "*tab}TRACK {(str(track.track) if track.track > 9 else "0" + str(track.track)) if track.track else "0" + "1"} AUDIO'
         if track.title:
             yield f'{" "*tab*2}TITLE "{track.title}"'
         if track.performer:
             yield f'{" "*tab*2}PERFORMER "{track.performer}"'
-        if track.index:
-            for idx in sorted(track.index.keys()):
-                yield f'{" "*tab*2}INDEX {idx} {track.index[idx]}'
+        if track.index00:
+            yield f'{" "*tab*2}INDEX 00 {track.index00.string}'
+        if track.index01:
+            yield f'{" "*tab*2}INDEX 01 {track.index01.string}'
 
 
 def loads(cue : str) -> AlbumData:

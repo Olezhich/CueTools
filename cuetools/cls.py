@@ -36,3 +36,11 @@ class FrameTimeCls:
 
     def __repr__(self) -> str:
         return f'FrameTime(frames={self.frames})'
+    
+    def __hash__(self) -> int:
+        return hash(self.frames)
+    
+    def __eq__(self, value: object) -> bool:
+        if not isinstance(value, FrameTimeCls):
+            return False
+        return self.frames == value.frames
