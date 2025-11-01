@@ -1,5 +1,6 @@
+from __future__ import annotations
 from pathlib import Path
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from cuetools.types import FrameTime, ReplayGainGain, ReplayGainPeak
 from cuetools.cls import FrameTimeCls
@@ -27,12 +28,19 @@ class TrackData(BaseModel):
         description="The index 01 (the beginning of the current track), corresponds to the line like *'INDEX 01 00:00:00'*",
     )
 
-    def set_performer(self, performer: TitleCase) -> None:
-        self.performer = performer
-    
-    def set_title(self, title: TitleCase) -> None:
-        self.title = title
+    @model_validator(mode='after')
+    def validate_index(self) -> TrackData:
+        if self.index00 is not None and self.index00.frames > self.index01.frames:
+            raise ValueError('Expected INDEX 00 <= INDEX 01')
+        return self
 
+    def set_performer(self, performer: TitleCase) -> None:
+        """Set track performer with a **Title Case** validation using `TitleCase` class consructor for string"""
+        self.performer = performer
+
+    def set_title(self, title: TitleCase) -> None:
+        """Set track title with a **Title Case** validation using `TitleCase` class consructor for string"""
+        self.title = title
 
 
 class RemData(BaseModel):
@@ -47,6 +55,7 @@ class RemData(BaseModel):
     )
 
     def set_genre(self, genre: TitleCase) -> None:
+        """Set album genre with a **Title Case** validation using `TitleCase` class consructor for string"""
         self.genre = genre
 
 
@@ -60,19 +69,24 @@ class AlbumData(BaseModel):
     tracks: list[TrackData] = Field(
         default_factory=list[TrackData], description='Track list of this album'
     )
-    def add_track(self, track : TrackData) -> None:
+
+    def add_track(self, track: TrackData) -> None:
         self.tracks.append(track)
 
     def set_performer(self, performer: TitleCase) -> None:
+        """Set album performer with a **Title Case** validation using `TitleCase` class consructor for string"""
         self.performer = performer
-    
+
     def set_title(self, title: TitleCase) -> None:
+        """Set album title with a **Title Case** validation using `TitleCase` class consructor for string"""
         self.title = title
 
     def __repr__(self) -> str:
-        tracks = str(',\n' + ' '*8).join(repr(track) for track in self.tracks)
-        return f'AlbumData(\n'\
-        f'    performer={self.performer!r},\n'\
-        f'    title={self.title!r},\n'\
-        f'    rem={repr(self.rem)},\n'\
-        f'    tracks=[\n        {tracks}\n    ]\n)'
+        tracks = str(',\n' + ' ' * 8).join(repr(track) for track in self.tracks)
+        return (
+            f'AlbumData(\n'
+            f'    performer={self.performer!r},\n'
+            f'    title={self.title!r},\n'
+            f'    rem={repr(self.rem)},\n'
+            f'    tracks=[\n        {tracks}\n    ]\n)'
+        )

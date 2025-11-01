@@ -19,4 +19,3 @@ FrameTime = Annotated[
 ReplayGainPeak = Annotated[float, BeforeValidator(validate_replaygain_peak)]
 
 ReplayGainGain = Annotated[float, BeforeValidator(validate_replaygain_gain)]
-

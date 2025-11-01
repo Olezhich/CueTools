@@ -2,9 +2,6 @@
 import cuetools
 
 
-from tests.conftest import *
-
-
 def test_load_one_track_one_file(cue_sample_one_file_one_track_no_quotes : str, 
                                  cue_sample_one_file_one_track_rem_quotes : str,
                                  cue_sample_one_file_one_track_meta_quotes : str,

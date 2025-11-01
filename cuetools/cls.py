@@ -3,6 +3,7 @@ from __future__ import annotations
 FRAMES_IN_SEC = 75
 FRAMES_IN_MIN = 4500
 
+
 class FrameTimeCls:
     def __init__(self, frames: int) -> None:
         if frames < 0:
@@ -23,23 +24,23 @@ class FrameTimeCls:
             raise ValueError('Expected 0 <= SS < 60 in MM:SS:FF')
 
         return cls(frames=FRAMES_IN_MIN * mm + FRAMES_IN_SEC * ss + ff)
-    
+
     @property
     def string(self) -> str:
         mm = self.frames // FRAMES_IN_MIN
         total = self.frames % FRAMES_IN_MIN
         ss = total // FRAMES_IN_SEC
         return f'{mm:02d}:{ss:02d}:{total % FRAMES_IN_SEC:02d}'
-    
+
     def __str__(self) -> str:
         return self.string
 
     def __repr__(self) -> str:
         return f'FrameTime(frames={self.frames})'
-    
+
     def __hash__(self) -> int:
         return hash(self.frames)
-    
+
     def __eq__(self, value: object) -> bool:
         if not isinstance(value, FrameTimeCls):
             return False
