@@ -1,14 +1,15 @@
-name: Run Tests on PR
+name: Tests
 
 on:
   pull_request:
     branches: [ main ]
 
 jobs:
-  test:
+  ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Copy sources
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -22,6 +23,14 @@ jobs:
       - name: Install dependencies with Poetry
         run: |
           poetry install --no-interaction --with dev
+
+      - name: Run ruff formatter
+        run: |
+          poetry run ruff format . --check
+
+      - name: Run ruff check
+        run: |
+          poetry run ruff check .
 
       - name: Run tests and generate coverage report
         run: |

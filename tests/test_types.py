@@ -57,12 +57,13 @@ def test_ReplayGain_peak():
     with pytest.raises(ValidationError):
         RemData(replaygain_album_peak='-0.001122')  # type: ignore
 
+
 def test_TitleCase():
     album = AlbumData(title=TitleCase('The Title'))
     assert album.title == 'The Title', 'only 2 capital words'
 
     with pytest.raises(ValueError):
         album.set_title(TitleCase('the Title'))
-    
+
     album.set_title(TitleCase("Now You're Talkin'"))
     assert album.title == "Now You're Talkin'", 'capital words and apostrophe'
