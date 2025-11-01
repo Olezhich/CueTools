@@ -4,22 +4,20 @@
 [![License](https://img.shields.io/github/license/Olezhich/CueLogic )](https://github.com/Olezhich/CueLogic/blob/main/LICENSE )
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue)](https://python.org)  
 [![Coverage Status](https://coveralls.io/repos/github/Olezhich/CueTools/badge.svg?branch=dev)](https://coveralls.io/github/Olezhich/CueTools?branch=dev)
-[![Build Status](https://github.com/Olezhich/CueLogic/workflows/Run%20Tests%20on%20PR/badge.svg )](https://github.com/Olezhich/CueLogic/actions )
+[![Tests](https://github.com/Olezhich/CueTools/workflows/Tests/badge.svg )](https://github.com/Olezhich/CueTools/actions )
 
-> **Lightweight CUE sheet toolkit for Python.**  
-Parse and generate `.cue` files programmatically.
+> **Lightweight CUE sheet toolkit for Python**  
+Parsing **Cue Sheets** (`.cue` files) into `Pydantic` data models and validating fields\
+Serialising data models into **Cue Sheets** (`.cue` files)
 
----
 
-## ✨ Features
+## Features
 
 - Parse `.cue` files into structured Python objects
 - Generate `.cue` file content from data
-- Simple and intuitive API
-- Lightweight — no external dependencies
+- Simple and intuitive API like `json` standard library
+- Lightweight — no external dependencies other than `Pydantic`
 - Supports Python 3.10+
-
----
 
 ## Cue Sheet specification
 
@@ -29,13 +27,19 @@ Parse and generate `.cue` files programmatically.
 - Additioonal ReplayGain specification
 [https://wiki.hydrogenaudio.org/index.php?title=ReplayGain_1.0_specification](https://wiki.hydrogenaudio.org/index.php?title=ReplayGain_1.0_specification)
 
-## 🚀 QuickStart
-**Installation of the library**
+## QuickStart
+### Installation of the library
+#### Via pip
 
 ```bash
 pip install cuetools
 ```
-**Using of the library**
+
+#### Via poetry
+```bash
+poetry add cuetools
+```
+### Using of the library
 ```python
 import cuetools
 
@@ -48,11 +52,11 @@ FILE "track01.flac" WAVE
 """
 
 cue_sheet = cuetools.loads(cue_string) 
-#cue_sheet is instance of AlbumData dataclass with parsed cue_string
+#cue_sheet is instance of AlbumData class with parsed cue_string
 
 track = cue_sheet.tracks[0]
-#track is instance of TrackData dataclass with parsed track data
+#track is instance of TrackData class with parsed track data
 
-print(track.link)      # Result: track01.wav
+print(track.file)      # Result: track01.flac
 print(track.title)     # Result: Intro
 print(track.performer) # Result: Artist
