@@ -1,0 +1,38 @@
+from enum import Enum
+import re
+from typing import Generator, NamedTuple
+
+
+class Token(Enum):
+    WHITE_SPACE = r'\s+'
+    PERFORMER = r'PERFORMER\b'
+    TITLE = r'TITLE\b'
+
+    ARG_QUOTES = r'"(.*)"'
+    ARG = r'(.*)'
+
+    def __init__(self, pattern: str) -> None:
+        self.regex = re.compile(pattern)
+
+
+class TokenMatch(NamedTuple):
+    type: Token
+    lexeme: str
+    pos: int
+
+
+def lex(line: str) -> Generator[TokenMatch, None, None]:
+    pos = 0
+    length = len(line)
+    while pos < length:
+        matched = False
+        for token in Token:
+            match = token.regex.match(line, pos)
+            if match:
+                matched = True
+                if token is not Token.WHITE_SPACE:
+                    yield TokenMatch(token, match.group(0), pos)
+                pos = match.end()
+                break
+        if not matched:
+            raise ValueError('Impossible to obtain any token')
