@@ -4,9 +4,9 @@ from typing import Generator, NamedTuple
 
 
 class Token(Enum):
-    WHITE_SPACE = r'\s+'
-    PERFORMER = r'PERFORMER\b'
-    TITLE = r'TITLE\b'
+    WHITE_SPACE = r'(\s+)'
+    PERFORMER = r'(PERFORMER)\b'
+    TITLE = r'(TITLE)\b'
 
     ARG_QUOTES = r'"(.*)"'
     ARG = r'(.*)'
@@ -31,7 +31,7 @@ def lex(line: str) -> Generator[TokenMatch, None, None]:
             if match:
                 matched = True
                 if token is not Token.WHITE_SPACE:
-                    yield TokenMatch(token, match.group(0), pos)
+                    yield TokenMatch(token, match.group(1), pos)
                 pos = match.end()
                 break
         if not matched:

@@ -1,6 +1,7 @@
-from typing import Iterator
+from typing import Callable, Iterator
 from cuetools.models import AlbumData
 from cuetools.parser.errors import CueParseError
+from cuetools.parser.handlers import title_case_handler
 from cuetools.parser.lex import Token, lex
 from cuetools.types.title_case import TitleCase
 
@@ -20,20 +21,10 @@ def load_f_iter(cue: Iterator[str], strict_title_case: bool = False) -> AlbumDat
         match tokens[0].type:
             case Token.PERFORMER:
                 performer = tokens[1]
-                match performer.type:
-                    case Token.ARG_QUOTES | Token.ARG:
-                        if strict_title_case:
-                            album.set_performer(TitleCase(performer.lexeme))
-                        else:
-                            album.performer = performer.lexeme
-                    case _:
-                        raise CueParseError(
-                            current_line,
-                            line,
-                            'performer name',
-                            performer.lexeme,
-                            performer.pos,
-                        )
+                title_case_handler(performer, strict_title_case, lambda x: setattr(album, 'performer', x), album.set_performer, current_line, line, 'album performer name')
+            case Token.TITLE:
+                title = tokens[1]
+                title_case_handler(title, strict_title_case, lambda x: setattr(album, 'title', x), album.set_title, current_line, line, 'album title')  
             case _:
                 ...
 

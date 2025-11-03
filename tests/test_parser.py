@@ -3,10 +3,12 @@ import cuetools
 
 import logging
 
+from cuetools.models import AlbumData
+
 logger = logging.getLogger(__name__)
 
 
-def test_errors():
+def test_line_parsing():
     cue_sheet = """PERFORMER TITLE"""
 
     with pytest.raises(cuetools.CueParseError) as e:
@@ -15,6 +17,14 @@ def test_errors():
         assert e.value.got == 'TITLE'
 
     logger.debug(e.value)
+
+    cue_sheet = '''TITLE "The Title Of Album"
+                    PERFORMER The Performer'''
+    
+    cue = cuetools.loads(cue_sheet)
+    logger.debug(cue)
+
+    assert cue == AlbumData(title="The Title Of Album", performer="The Performer")
 
 
 # def test_load_one_track_one_file(
