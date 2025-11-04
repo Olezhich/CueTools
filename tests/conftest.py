@@ -139,8 +139,8 @@ def obj_sample_rem() -> AlbumData:
         rem=RemData(
             genre='Hard Rock',
             date=1969,
-            replaygain_album_gain='-4.10 db',
-            replaygain_album_peak='0.987654',
+            replaygain_album_gain='-4.10 db',  # type: ignore
+            replaygain_album_peak='0.987654',  # type: ignore
         )
     )
     return album

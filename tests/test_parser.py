@@ -3,7 +3,7 @@ import cuetools
 
 import logging
 
-from cuetools.models import AlbumData
+from cuetools.models import AlbumData, RemData
 
 logger = logging.getLogger(__name__)
 
@@ -18,13 +18,35 @@ def test_line_parsing():
 
     logger.debug(e.value)
 
-    cue_sheet = '''TITLE "The Title Of Album"
-                    PERFORMER The Performer'''
-    
+    cue_sheet = """TITLE "The Title Of Album"
+                    PERFORMER The Performer"""
+
     cue = cuetools.loads(cue_sheet)
     logger.debug(cue)
 
-    assert cue == AlbumData(title="The Title Of Album", performer="The Performer")
+    assert cue == AlbumData(title='The Title Of Album', performer='The Performer')
+
+    cue_sheet = """FILE "The Title Of Album:::"!%^&" WAVE"""
+
+    cue = cuetools.loads(cue_sheet)
+
+    cue_sheet = """REM GENRES Blues"""
+    with pytest.raises(cuetools.CueParseError) as e:
+        cuetools.loads(cue_sheet)
+    logger.debug(e.value)
+
+    cue_sheet = """REM DATE wrong1969date"""
+    with pytest.raises(cuetools.CueValidationError) as e:
+        cuetools.loads(cue_sheet)
+    logger.debug(e.value)
+
+    cue_sheet = """REM GENRE Blues
+                    REM DATE 1969"""
+
+    cue = cuetools.loads(cue_sheet)
+    logger.debug(cue)
+
+    assert cue == AlbumData(rem=RemData(genre='Blues', date=1969))
 
 
 # def test_load_one_track_one_file(

@@ -8,6 +8,13 @@ class Token(Enum):
     PERFORMER = r'(PERFORMER)\b'
     TITLE = r'(TITLE)\b'
 
+    FILE = r'(FILE)\b'
+    WAVE = r'(WAVE)\b'
+
+    REM = r'(REM)\b'
+    GENRE = r'(GENRE)\b'
+    DATE = r'(DATE)\b'
+
     ARG_QUOTES = r'"(.*)"'
     ARG = r'(.*)'
 
