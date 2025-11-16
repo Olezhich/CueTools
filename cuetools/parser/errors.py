@@ -48,7 +48,7 @@ class CueValidationError(CueBaseError):
 
     def _format_msg(self) -> str:
         header = (
-            str(self.validation_error.json)
+            str(self.validation_error.json(indent=4))
             if isinstance(self.validation_error, ValidationError)
             else self.validation_error.args[0]
         )

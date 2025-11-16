@@ -14,6 +14,8 @@ class Token(Enum):
     REM = r'(REM)\b'
     GENRE = r'(GENRE)\b'
     DATE = r'(DATE)\b'
+    REPLAYGAIN_ALBUM_GAIN = r'(REPLAYGAIN_ALBUM_GAIN)\b'
+    REPLAYGAIN_ALBUM_PEAK = r'(REPLAYGAIN_ALBUM_PEAK)\b'
 
     ARG_QUOTES = r'"(.*)"'
     ARG = r'(.*)'

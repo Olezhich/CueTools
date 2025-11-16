@@ -17,108 +17,130 @@ def load_f_iter(cue: Iterator[str], strict_title_case: bool = False) -> AlbumDat
     for line in cue:
         current_line += 1
         tokens = [i for i in lex(line)]
-
-        match tokens[0].type:
-            case Token.PERFORMER:
-                performer = tokens[1]
-                title_case_handler(
-                    performer,
-                    strict_title_case,
-                    lambda x: setattr(album, 'performer', x),
-                    album.set_performer,
-                    current_line,
-                    line,
-                    'album performer name',
-                )
-            case Token.TITLE:
-                title = tokens[1]
-                title_case_handler(
-                    title,
-                    strict_title_case,
-                    lambda x: setattr(album, 'title', x),
-                    album.set_title,
-                    current_line,
-                    line,
-                    'album title',
-                )
-            case Token.FILE:
-                filepath = tokens[1]
-                match filepath.type:
-                    case Token.ARG_QUOTES:
-                        file_type = tokens[2]
-                        match file_type.type:
-                            case Token.WAVE:
-                                if filepath.lexeme.endswith('.mp3'):
+        try:
+            match tokens[0].type:
+                case Token.PERFORMER:
+                    performer = tokens[1]
+                    title_case_handler(
+                        performer,
+                        strict_title_case,
+                        lambda x: setattr(album, 'performer', x),
+                        album.set_performer,
+                        current_line,
+                        line,
+                        'album performer name',
+                    )
+                case Token.TITLE:
+                    title = tokens[1]
+                    title_case_handler(
+                        title,
+                        strict_title_case,
+                        lambda x: setattr(album, 'title', x),
+                        album.set_title,
+                        current_line,
+                        line,
+                        'album title',
+                    )
+                case Token.FILE:
+                    filepath = tokens[1]
+                    match filepath.type:
+                        case Token.ARG_QUOTES:
+                            file_type = tokens[2]
+                            match file_type.type:
+                                case Token.WAVE:
+                                    if filepath.lexeme.endswith('.mp3'):
+                                        raise CueParseError(
+                                            current_line,
+                                            line,
+                                            'MP3',
+                                            file_type.lexeme,
+                                            file_type.pos,
+                                        )
+                                case _:
                                     raise CueParseError(
                                         current_line,
                                         line,
-                                        'MP3',
+                                        'file type tag',
                                         file_type.lexeme,
                                         file_type.pos,
                                     )
-                            case _:
-                                raise CueParseError(
-                                    current_line,
-                                    line,
-                                    'file type tag',
-                                    file_type.lexeme,
-                                    file_type.pos,
-                                )
 
-                        current_file = (  # noqa: F841 # type: ignore
-                            Path(filepath.lexeme),
-                            current_line,
-                            line,
-                            filepath.pos,
-                            filepath.lexeme,
-                        )
-                    case _:
-                        CueParseError(
-                            current_line,
-                            line,
-                            'audiofile path',
-                            filepath.lexeme,
-                            filepath.pos,
-                        )
-            case Token.REM:
-                rem_type = tokens[1]
-                match rem_type.type:
-                    case Token.GENRE:
-                        genre = tokens[2]
-                        title_case_handler(
-                            genre,
-                            strict_title_case,
-                            lambda x: setattr(album.rem, 'genre', x),
-                            album.rem.set_genre,
-                            current_line,
-                            line,
-                            'album genre',
-                        )
-                    case Token.DATE:
-                        date = tokens[2]
-                        try:
-                            album.rem.date = int(date.lexeme)
-                        except ValueError as e:
-                            raise CueValidationError(
-                                current_line, line, date.pos, date.lexeme, e
+                            current_file = (  # noqa: F841 # type: ignore
+                                Path(filepath.lexeme),
+                                current_line,
+                                line,
+                                filepath.pos,
+                                filepath.lexeme,
                             )
-                    case _:
-                        raise CueParseError(
-                            current_line,
-                            line,
-                            'Correct REM parameter',
-                            rem_type.lexeme,
-                            rem_type.pos,
-                        )
+                        case _:
+                            CueParseError(
+                                current_line,
+                                line,
+                                'audiofile path',
+                                filepath.lexeme,
+                                filepath.pos,
+                            )
+                case Token.REM:
+                    rem_type = tokens[1]
+                    # # value = tokens[2]
+                    # if len(tokens) != 2:
+                    #     raise CueParseError(current_line, line, 'correct REM tokens', repr([i.lexeme for i in tokens]), 0)
+                    # rem_type, value, *_ = tokens
+                    match rem_type.type:
+                        case Token.GENRE:
+                            genre = tokens[2]
+                            title_case_handler(
+                                genre,
+                                strict_title_case,
+                                lambda x: setattr(album.rem, 'genre', x),
+                                album.rem.set_genre,
+                                current_line,
+                                line,
+                                'album genre',
+                            )
+                        case Token.DATE:
+                            date = tokens[2]
+                            try:
+                                album.rem.date = int(date.lexeme)
+                            except ValueError as e:
+                                raise CueValidationError(
+                                    current_line, line, date.pos, date.lexeme, e
+                                )
+                        case Token.REPLAYGAIN_ALBUM_GAIN:
+                            rgg = tokens[2]
+                            try:
+                                album.rem.replaygain_album_gain = rgg.lexeme  # type: ignore[assignment]
+                            except ValueError as e:
+                                raise CueValidationError(
+                                    current_line, line, rgg.pos, rgg.lexeme, e
+                                )
+                        case Token.REPLAYGAIN_ALBUM_PEAK:
+                            rgp = tokens[2]
+                            try:
+                                album.rem.replaygain_album_peak = rgp.lexeme  # type: ignore[assignment]
+                            except ValueError as e:
+                                raise CueValidationError(
+                                    current_line, line, rgp.pos, rgp.lexeme, e
+                                )
+                        case _:
+                            raise CueParseError(
+                                current_line,
+                                line,
+                                'Correct REM parameter',
+                                rem_type.lexeme,
+                                rem_type.pos,
+                            )
 
-            case _:
-                raise CueParseError(
-                    current_line,
-                    line,
-                    'Correct CUE keyword',
-                    tokens[0].lexeme,
-                    tokens[0].pos,
-                )
+                case _:
+                    raise CueParseError(
+                        current_line,
+                        line,
+                        'Correct CUE keyword',
+                        tokens[0].lexeme,
+                        tokens[0].pos,
+                    )
+        except IndexError:
+            raise CueParseError(current_line, line, 'More tokens to parse the string correctly', line, 0)
 
     #     if line.startswith('PERFORMER') and not current_track:
     #         performer = process_line(line, 'PERFORMER')[0]

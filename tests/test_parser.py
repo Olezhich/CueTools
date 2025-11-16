@@ -9,6 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 def test_line_parsing():
+
+
     cue_sheet = """PERFORMER TITLE"""
 
     with pytest.raises(cuetools.CueParseError) as e:
@@ -30,6 +32,11 @@ def test_line_parsing():
 
     cue = cuetools.loads(cue_sheet)
 
+    cue_sheet = """REM"""
+    with pytest.raises(cuetools.CueParseError) as e:
+        cue = cuetools.loads(cue_sheet)
+    logger.debug(e.value)
+
     cue_sheet = """REM GENRES Blues"""
     with pytest.raises(cuetools.CueParseError) as e:
         cuetools.loads(cue_sheet)
@@ -47,6 +54,17 @@ def test_line_parsing():
     logger.debug(cue)
 
     assert cue == AlbumData(rem=RemData(genre='Blues', date=1969))
+
+    cue_sheet = """REM REPLAYGAIN_ALBUM_GAIN 12.5"""
+    with pytest.raises(cuetools.CueValidationError) as e:
+        cue = cuetools.loads(cue_sheet)
+    logger.debug(e.value)
+
+    cue_sheet = """REM REPLAYGAIN_ALBUM_GAIN 5.44 dB
+                    REM REPLAYGAIN_ALBUM_PEAK 0.987654"""
+
+    cue = cuetools.loads(cue_sheet)
+    logger.debug(cue)
 
 
 # def test_load_one_track_one_file(
