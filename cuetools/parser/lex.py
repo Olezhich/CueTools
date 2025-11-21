@@ -17,6 +17,10 @@ class Token(Enum):
     REPLAYGAIN_ALBUM_GAIN = r'(REPLAYGAIN_ALBUM_GAIN)\b'
     REPLAYGAIN_ALBUM_PEAK = r'(REPLAYGAIN_ALBUM_PEAK)\b'
 
+    TRACK = r'TRACK (\d\d+)\b'
+    AUDIO = r'(AUDIO)\b'
+    INDEX = r'INDEX (\d\d)\b'
+
     ARG_QUOTES = r'"(.*)"'
     ARG = r'(.*)'
 

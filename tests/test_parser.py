@@ -4,13 +4,32 @@ import cuetools
 import logging
 
 from cuetools.models import AlbumData, RemData
+from cuetools.parser.errors import CueParseError
 
 logger = logging.getLogger(__name__)
 
 
+class TestLoad:
+    def test_one_file_one_track_default(
+        self,
+        cue_sample_one_file_one_track_default,
+        obj_sample_one_file_one_track_default,
+    ):
+        assert (
+            cuetools.loads(cue_sample_one_file_one_track_default)
+            == obj_sample_one_file_one_track_default
+        )
+
+    def test_one_file_one_track_strict(
+        self, cue_sample_one_file_one_track_strict, obj_sample_one_file_one_track_strict
+    ):
+        assert (
+            cuetools.loads(cue_sample_one_file_one_track_strict)
+            == obj_sample_one_file_one_track_strict
+        )
+
+
 def test_line_parsing():
-
-
     cue_sheet = """PERFORMER TITLE"""
 
     with pytest.raises(cuetools.CueParseError) as e:
@@ -29,8 +48,9 @@ def test_line_parsing():
     assert cue == AlbumData(title='The Title Of Album', performer='The Performer')
 
     cue_sheet = """FILE "The Title Of Album:::"!%^&" WAVE"""
-
-    cue = cuetools.loads(cue_sheet)
+    with pytest.raises(CueParseError) as e:
+        cue = cuetools.loads(cue_sheet)
+    logger.debug(e.value)
 
     cue_sheet = """REM"""
     with pytest.raises(cuetools.CueParseError) as e:
