@@ -51,12 +51,55 @@ def album_rem_gen(quotes: bool = False, **kwargs: str | list[str]) -> list[str]:
     return [f'REM {i}' for i in album_meta_gen(quotes, **kwargs)]
 
 
-def album_rem_default(quotes: bool = False) -> list[str]:
-    return album_rem_gen(quotes, genre='Rock', date='1969')  # , comment='comment')
+# FIXTURES
+
+# Meta
 
 
-def album_meta_default(quotes: bool = False) -> list[str]:
-    return album_meta_gen(quotes, performer='The Performer', title='The Title Of Album')
+@pytest.fixture(params=[False, True])
+def album_meta_default(request) -> list[str]:
+    return album_meta_gen(
+        request.param, performer='the performer', title='the title of album'
+    )
+
+
+@pytest.fixture(params=[False, True])
+def album_meta_strict(request) -> list[str]:
+    return album_meta_gen(
+        request.param, performer='The Performer', title='The Title Of Album'
+    )
+
+
+# Rem
+
+
+@pytest.fixture(params=[False, True])
+def album_rem_default(request) -> list[str]:
+    return album_rem_gen(request.param, genre='rock', date='1969')
+
+
+@pytest.fixture(params=[False, True])
+def album_rem_strict(request) -> list[str]:
+    return album_rem_gen(request.param, genre='Rock', date='1969')
+
+
+# Cues
+
+# one FILE one track case
+
+
+@pytest.fixture()
+def cue_sample_one_file_one_track_default(album_meta_default, album_rem_default) -> str:
+    cuesheet = album_meta_default + album_rem_default
+    cuesheet += [track_gen(f'0{i} - Song 0{i}.flac', f'song {i}') for i in range(1, 8)]
+    return '\n'.join(cuesheet)
+
+
+@pytest.fixture()
+def cue_sample_one_file_one_track_strict(album_meta_strict, album_rem_strict) -> str:
+    cuesheet = album_meta_strict + album_rem_strict
+    cuesheet += [track_gen(f'0{i} - Song 0{i}.flac', f'Song {i}') for i in range(1, 8)]
+    return '\n'.join(cuesheet)
 
 
 @pytest.fixture()
@@ -87,8 +130,27 @@ def cue_sample_one_file_one_track_rem_meta_quotes() -> str:
     return '\n'.join(cuesheet)
 
 
+# Objects
+
+# one FILE one track case
+
+
 @pytest.fixture()
-def obj_sample_one_file_one_track() -> AlbumData:
+def obj_sample_one_file_one_track_default() -> AlbumData:
+    album = AlbumData(
+        performer='the performer',
+        title='the title of album',
+        rem=RemData(genre='rock', date=1969),
+    )
+    for i in range(1, 8):
+        album.add_track(
+            TrackData(track=i, title=f'song {i}', file=Path(f'0{i} - Song 0{i}.flac'))
+        )
+    return album
+
+
+@pytest.fixture()
+def obj_sample_one_file_one_track_strict() -> AlbumData:
     album = AlbumData(
         performer='The Performer',
         title='The Title Of Album',

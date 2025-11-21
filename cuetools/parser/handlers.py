@@ -13,6 +13,7 @@ def title_case_handler(
     line: str,
     err_expected_comment: str,
 ) -> None:
+    """Set value in default/strict mode, if needs raise a `CueParseError`"""
     match value.type:
         case Token.ARG_QUOTES | Token.ARG:
             if strict:

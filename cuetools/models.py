@@ -9,8 +9,7 @@ from cuetools.types.title_case import TitleCase
 
 class TrackData(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True, validate_assignment=True)
-    file: Path | None = Field(
-        default=None,
+    file: Path = Field(
         description='Path to the audio file with this track (to flac, ape or etc.) relative to the cue sheet file',
     )
     track: int | None = Field(

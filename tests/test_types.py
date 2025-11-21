@@ -1,3 +1,4 @@
+from pathlib import Path
 from pydantic import ValidationError
 import pytest
 from cuetools import TrackData
@@ -6,18 +7,18 @@ from cuetools.types.title_case import TitleCase
 
 
 def test_FrameTime():
-    track = TrackData(index00='01:50:05', index01=9000)  # type: ignore
-    assert track.index00.frames == 8255, 'using string to FrameTime cast'
+    track = TrackData(index00='01:50:05', index01=9000, file=Path('/'))  # type: ignore
+    assert track.index00.frames == 8255, 'using string to FrameTime cast'  # type: ignore
     assert track.index01.string == '02:00:00', 'using int to FrameTime cast'
 
     with pytest.raises(ValidationError):
-        TrackData(index00='00:61:76')  # type: ignore
+        track.index00 = '00:61:76'  # type: ignore
 
     with pytest.raises(ValidationError):
-        TrackData(index00='00')  # type: ignore
+        track.index00 = '00'  # type: ignore
 
     with pytest.raises(ValidationError):
-        TrackData(index00=-1234)  # type: ignore
+        track.index00 = -1234  # type: ignore
 
 
 def test_ReplayGain_gain():
