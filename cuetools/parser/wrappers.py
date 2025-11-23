@@ -8,11 +8,11 @@ def str_iter(s: str) -> Iterator[str]:
         yield line
 
 
-def loads(cue: str) -> AlbumData:
+def loads(cue: str, strict_title_case: bool = False) -> AlbumData:
     """loading an object from a string, similar to the function json.loads()"""
-    return load_f_iter(str_iter(cue))
+    return load_f_iter(str_iter(cue), strict_title_case=strict_title_case)
 
 
-def load(fp: IO[str]) -> AlbumData:
+def load(fp: IO[str], strict_title_case: bool = False) -> AlbumData:
     """loading an object from a file pointer, similar to the function json.load()"""
-    return load_f_iter(fp)
+    return load_f_iter(fp, strict_title_case=strict_title_case)

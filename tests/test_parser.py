@@ -9,23 +9,51 @@ from cuetools.parser.errors import CueParseError
 logger = logging.getLogger(__name__)
 
 
-class TestLoad:
-    def test_one_file_one_track_default(
+class TestLoadDefault:
+    def test_one_file_one_track(
         self,
-        cue_sample_one_file_one_track_default,
-        obj_sample_one_file_one_track_default,
+        cue_sample_one_file_one_track_default: str,
+        obj_sample_one_file_one_track_default: AlbumData,
     ):
         assert (
-            cuetools.loads(cue_sample_one_file_one_track_default)
+            cuetools.loads(
+                cue_sample_one_file_one_track_default,
+            )
             == obj_sample_one_file_one_track_default
         )
 
-    def test_one_file_one_track_strict(
-        self, cue_sample_one_file_one_track_strict, obj_sample_one_file_one_track_strict
+    def test_one_file_many_tracks(
+        self,
+        cue_sample_one_file_many_tracks_default: str,
+        obj_sample_one_file_many_tracks_default: AlbumData,
     ):
         assert (
-            cuetools.loads(cue_sample_one_file_one_track_strict)
+            cuetools.loads(cue_sample_one_file_many_tracks_default)
+            == obj_sample_one_file_many_tracks_default
+        )
+
+
+class TestLoadStrict:
+    def test_one_file_one_track(
+        self,
+        cue_sample_one_file_one_track_strict: str,
+        obj_sample_one_file_one_track_strict: AlbumData,
+    ):
+        assert (
+            cuetools.loads(cue_sample_one_file_one_track_strict, strict_title_case=True)
             == obj_sample_one_file_one_track_strict
+        )
+
+    def test_one_file_many_tracks(
+        self,
+        cue_sample_one_file_many_tracks_strict: str,
+        obj_sample_one_file_many_tracks_strict: AlbumData,
+    ):
+        assert (
+            cuetools.loads(
+                cue_sample_one_file_many_tracks_strict, strict_title_case=True
+            )
+            == obj_sample_one_file_many_tracks_strict
         )
 
 
