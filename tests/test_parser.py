@@ -16,7 +16,9 @@ class TestLoadDefault:
         obj_sample_one_file_one_track_default: AlbumData,
     ):
         assert (
-            cuetools.loads(cue_sample_one_file_one_track_default,)
+            cuetools.loads(
+                cue_sample_one_file_one_track_default,
+            )
             == obj_sample_one_file_one_track_default
         )
 
@@ -38,7 +40,7 @@ class TestLoadStrict:
         obj_sample_one_file_one_track_strict: AlbumData,
     ):
         assert (
-            cuetools.loads(cue_sample_one_file_one_track_strict)
+            cuetools.loads(cue_sample_one_file_one_track_strict, strict_title_case=True)
             == obj_sample_one_file_one_track_strict
         )
 
@@ -48,7 +50,9 @@ class TestLoadStrict:
         obj_sample_one_file_many_tracks_strict: AlbumData,
     ):
         assert (
-            cuetools.loads(cue_sample_one_file_many_tracks_strict)
+            cuetools.loads(
+                cue_sample_one_file_many_tracks_strict, strict_title_case=True
+            )
             == obj_sample_one_file_many_tracks_strict
         )
 

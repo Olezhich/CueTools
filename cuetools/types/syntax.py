@@ -12,7 +12,7 @@ def syntax(title: str) -> bool:
     state = States.START
     for token in lex(title=title):
         if state == States.START:
-            if token == Token.CAPITAL_WORD:
+            if any(token == i for i in [Token.CAPITAL_WORD, Token.NUM]):
                 state = States.EXPECT_SPACE
             else:
                 return False
@@ -22,7 +22,7 @@ def syntax(title: str) -> bool:
             else:
                 return False
         elif state == States.EXPECT_WORD:
-            if token == Token.CAPITAL_WORD:
+            if any(token == i for i in [Token.CAPITAL_WORD, Token.NUM]):
                 state = States.EXPECT_SPACE
             else:
                 return False

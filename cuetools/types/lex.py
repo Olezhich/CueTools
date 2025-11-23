@@ -7,6 +7,7 @@ class Token(Enum):
     CAPITAL_WORD = r'[A-Z][a-z]*(?:\'[a-z]*)?'
     MINOR_WORD = r'[a-z]+'
     SPACE = r' '
+    NUM = r'\d+'
 
     def __init__(self, pattern: str) -> None:
         self.regex = re.compile(pattern)
