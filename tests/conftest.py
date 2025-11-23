@@ -1,6 +1,6 @@
 from curses.ascii import isdigit
 from pathlib import Path
-# from shlex import quote
+from typing import Any
 
 import pytest
 from cuetools import AlbumData, TrackData
@@ -57,14 +57,14 @@ def album_rem_gen(quotes: bool = False, **kwargs: str | list[str]) -> list[str]:
 
 
 @pytest.fixture(params=[False, True])
-def album_meta_default(request) -> list[str]:
+def album_meta_default(request: Any) -> list[str]:
     return album_meta_gen(
         request.param, performer='the performer', title='the title of album'
     )
 
 
 @pytest.fixture(params=[False, True])
-def album_meta_strict(request) -> list[str]:
+def album_meta_strict(request: Any) -> list[str]:
     return album_meta_gen(
         request.param, performer='The Performer', title='The Title Of Album'
     )
@@ -74,13 +74,26 @@ def album_meta_strict(request) -> list[str]:
 
 
 @pytest.fixture(params=[False, True])
-def album_rem_default(request) -> list[str]:
+def album_rem_default(request: Any) -> list[str]:
     return album_rem_gen(request.param, genre='rock', date='1969')
 
 
 @pytest.fixture(params=[False, True])
-def album_rem_strict(request) -> list[str]:
+def album_rem_strict(request: Any) -> list[str]:
     return album_rem_gen(request.param, genre='Rock', date='1969')
+
+
+# Tracks
+
+
+@pytest.fixture()
+def album_tracks_default() -> list[str]:
+    return [track_gen(f'0{i} - Song 0{i}.flac', f'song {i}') for i in range(1, 8)]
+
+
+@pytest.fixture()
+def album_tracks_strict() -> list[str]:
+    return [track_gen(f'0{i} - Song 0{i}.flac', f'Song {i}') for i in range(1, 8)]
 
 
 # Cues
@@ -89,44 +102,43 @@ def album_rem_strict(request) -> list[str]:
 
 
 @pytest.fixture()
-def cue_sample_one_file_one_track_default(album_meta_default, album_rem_default) -> str:
+def cue_sample_one_file_one_track_default(
+    album_meta_default: list[str],
+    album_rem_default: list[str],
+    album_tracks_default: list[str],
+) -> str:
+    cuesheet = album_meta_default + album_rem_default + album_tracks_default
+    return '\n'.join(cuesheet)
+
+
+@pytest.fixture()
+def cue_sample_one_file_one_track_strict(
+    album_meta_strict: list[str],
+    album_rem_strict: list[str],
+    album_tracks_strict: list[str],
+) -> str:
+    cuesheet = album_meta_strict + album_rem_strict + album_tracks_strict
+    return '\n'.join(cuesheet)
+
+
+# one FILE many tracks case
+
+
+@pytest.fixture()
+def cue_sample_one_file_many_tracks_default(
+    album_meta_default: list[str], album_rem_default: list[str]
+) -> str:
     cuesheet = album_meta_default + album_rem_default
-    cuesheet += [track_gen(f'0{i} - Song 0{i}.flac', f'song {i}') for i in range(1, 8)]
+    cuesheet += [track_gen('The Title Of Album.flac', 'track title', 7)]
     return '\n'.join(cuesheet)
 
 
 @pytest.fixture()
-def cue_sample_one_file_one_track_strict(album_meta_strict, album_rem_strict) -> str:
+def cue_sample_one_file_many_tracks_strict(
+    album_meta_strict: list[str], album_rem_strict: list[str]
+) -> str:
     cuesheet = album_meta_strict + album_rem_strict
-    cuesheet += [track_gen(f'0{i} - Song 0{i}.flac', f'Song {i}') for i in range(1, 8)]
-    return '\n'.join(cuesheet)
-
-
-@pytest.fixture()
-def cue_sample_one_file_one_track_no_quotes() -> str:
-    cuesheet = album_rem_default() + album_meta_default()
-    cuesheet += [track_gen(f'0{i} - Song 0{i}.flac', f'Song {i}') for i in range(1, 8)]
-    return '\n'.join(cuesheet)
-
-
-@pytest.fixture()
-def cue_sample_one_file_one_track_rem_quotes() -> str:
-    cuesheet = album_rem_default(True) + album_meta_default()
-    cuesheet += [track_gen(f'0{i} - Song 0{i}.flac', f'Song {i}') for i in range(1, 8)]
-    return '\n'.join(cuesheet)
-
-
-@pytest.fixture()
-def cue_sample_one_file_one_track_meta_quotes() -> str:
-    cuesheet = album_rem_default() + album_meta_default(True)
-    cuesheet += [track_gen(f'0{i} - Song 0{i}.flac', f'Song {i}') for i in range(1, 8)]
-    return '\n'.join(cuesheet)
-
-
-@pytest.fixture()
-def cue_sample_one_file_one_track_rem_meta_quotes() -> str:
-    cuesheet = album_rem_default(True) + album_meta_default(True)
-    cuesheet += [track_gen(f'0{i} - Song 0{i}.flac', f'Song {i}') for i in range(1, 8)]
+    cuesheet += [track_gen('The Title Of Album.flac', 'Track Title', 7)]
     return '\n'.join(cuesheet)
 
 
@@ -159,6 +171,41 @@ def obj_sample_one_file_one_track_strict() -> AlbumData:
     for i in range(1, 8):
         album.add_track(
             TrackData(track=i, title=f'Song {i}', file=Path(f'0{i} - Song 0{i}.flac'))
+        )
+    return album
+
+
+# one FILE many tracks case
+
+
+@pytest.fixture()
+def obj_sample_one_file_many_tracks_default() -> AlbumData:
+    album = AlbumData(
+        performer='the performer',
+        title='the title of album',
+        rem=RemData(genre='rock', date=1969),
+    )
+    for i in range(1, 8):
+        album.add_track(
+            TrackData(
+                track=i, title='track title', file=Path('The Title Of Album.flac')
+            )
+        )
+    return album
+
+
+@pytest.fixture()
+def obj_sample_one_file_many_tracks_strict() -> AlbumData:
+    album = AlbumData(
+        performer='The Performer',
+        title='The Title Of Album',
+        rem=RemData(genre='Rock', date=1969),
+    )
+    for i in range(1, 8):
+        album.add_track(
+            TrackData(
+                track=i, title='Track Title', file=Path('The Title Of Album.flac')
+            )
         )
     return album
 
