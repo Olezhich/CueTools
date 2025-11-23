@@ -10,13 +10,15 @@
 Parsing **Cue Sheets** (`.cue` files) into `Pydantic` data models and validating fields\
 Serialising data models into **Cue Sheets** (`.cue` files)
 
+> **Note**: This is an independent Python library. The name *cuetools* reflects the purpose of the library (handling CUE files) and is not intended to imply any association with other projects of the same name.
 
 ## Features
 
-- Parse `.cue` files into structured Python objects
+- Parse `.cue` files into `Pydantic` models with built-in validation
 - Generate `.cue` file content from data
 - Simple and intuitive API like `json` standard library
 - Lightweight — no external dependencies other than `Pydantic`
+- Fully type-annotated — compatible with `MyPy`
 - Supports Python 3.10+
 
 ## Cue Sheet specification
@@ -60,3 +62,8 @@ track = cue_sheet.tracks[0]
 print(track.file)      # Result: track01.flac
 print(track.title)     # Result: Intro
 print(track.performer) # Result: Artist
+```
+
+
+## License
+MIT
