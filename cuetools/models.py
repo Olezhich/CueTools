@@ -3,7 +3,7 @@ from pathlib import Path
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from cuetools.types import FrameTime, ReplayGainGain, ReplayGainPeak
-from cuetools.cls import FrameTimeCls
+from cuetools.types.frame_time import FrameTimeCls
 from cuetools.types.title_case import TitleCase
 
 
