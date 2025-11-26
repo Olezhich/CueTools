@@ -8,7 +8,7 @@ from cuetools.types.validators import (
     validate_replaygain_peak,
     validate_replaygain_gain,
 )
-from cuetools.cls import FrameTimeCls
+from cuetools.types.frame_time import FrameTimeCls
 
 FrameTime = Annotated[
     FrameTimeCls,

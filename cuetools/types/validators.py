@@ -1,4 +1,4 @@
-from cuetools.cls import FrameTimeCls
+from cuetools.types.frame_time import FrameTimeCls
 import re
 
 
