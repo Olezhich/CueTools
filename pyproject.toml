@@ -7,8 +7,7 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-repository = "https://github.com/Olezhich/CueTools"
-keywords = ["cue", "audio", "parser"]
+keywords = ["cue", "audio", "parser", "metadata", "cue-sheet"]
 
 requires-python = ">=3.10"
 dependencies = [
@@ -18,6 +17,11 @@ dependencies = [
 packages = [
     { include = "cuetools" }
 ]
+
+[project.urls]
+Homepage = "https://github.com/Olezhich/CueTools"
+Repository = "https://github.com/Olezhich/CueTools"
+Changelog = "https://github.com/Olezhich/CueTools/blob/main/CHANGELOG.md"
 
 [tool.ruff]
 target-version = "py310"
