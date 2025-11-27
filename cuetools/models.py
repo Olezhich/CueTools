@@ -8,6 +8,11 @@ from cuetools.types.title_case import TitleCase
 
 
 class TrackData(BaseModel):
+    """Represents a single track within a CUE sheet.
+
+    Includes file reference, track number, metadata
+    such as title, performer, index, etc."""
+
     model_config = ConfigDict(arbitrary_types_allowed=True, validate_assignment=True)
     file: Path = Field(
         description='Path to the audio file with this track (to flac, ape or etc.) relative to the cue sheet file',
@@ -54,11 +59,16 @@ class RemData(BaseModel):
     )
 
     def set_genre(self, genre: TitleCase) -> None:
-        """Set album genre with a **Title Case** validation using `TitleCase` class consructor for string"""
+        """Set album genre with a Title Case validation using `TitleCase` class consructor for string"""
         self.genre = genre
 
 
 class AlbumData(BaseModel):
+    """Represents a parsed CUE sheet at the album level.
+
+    Contains global metadata (performer, title, etc.) and a list of tracks.
+    """
+
     model_config = ConfigDict(validate_assignment=True)
     performer: str | None = Field(default=None, description='Album performer')
     title: str | None = Field(default=None, description='Album title')

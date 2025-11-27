@@ -23,6 +23,8 @@ class CueBaseError(ValueError):
 
 
 class CueParseError(CueBaseError):
+    """Raised when CUE sheet syntax is invalid."""
+
     def __init__(
         self, line: int, line_content: str, expected: str, got: str, pos: int
     ) -> None:
@@ -35,6 +37,8 @@ class CueParseError(CueBaseError):
 
 
 class CueValidationError(CueBaseError):
+    """Raised when semantic rules are violated."""
+
     def __init__(
         self,
         line: int,
