@@ -21,6 +21,11 @@ Serialising data models into **Cue Sheets** (`.cue` files)
 - Fully type-annotated — compatible with `MyPy`
 - Supports Python 3.10+
 
+## Changes
+For a full list of updates, see the [CHANGELOG](CHANGELOG.md).
+
+> **Note**: Version 1.0.0 includes **breaking changes** and is **not backward compatible** with earlier versions, please review the [CHANGELOG](CHANGELOG.md).
+
 ## Cue Sheet specification
 
 - Main cue sheet specification
@@ -62,6 +67,7 @@ track = cue_sheet.tracks[0]
 print(track.file)      # Result: track01.flac
 print(track.title)     # Result: Intro
 print(track.performer) # Result: Artist
+print(track.index00.string) # Result: 00:00:00
 ```
 
 

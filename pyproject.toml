@@ -1,13 +1,13 @@
 [project]
 name = "cuetools"
-version = "0.2.0"
+version = "1.0.0"
 description = "Lightweight CUE sheet toolkit for Python"
 authors = [
     {name = "Olezhich"}
 ]
 license = {text = "MIT"}
 readme = "README.md"
-repository = "https://github.com/Olezhich/CueLogic"
+repository = "https://github.com/Olezhich/CueTools"
 keywords = ["cue", "audio", "parser"]
 
 requires-python = ">=3.10"
