@@ -82,7 +82,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 [Unreleased]: https://github.com/Olezhich/CueTools/compare/v1.0.0...main
-[1.0.1]: https://github.com/Olezhich/CueTools/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Olezhich/CueTools/compare/v0.1.5...v1.0.0
 [0.1.5]: https://github.com/Olezhich/CueTools/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/Olezhich/CueTools/compare/v0.1.3...v0.1.4
