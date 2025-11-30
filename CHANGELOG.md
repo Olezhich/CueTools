@@ -5,9 +5,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.0.1] - 2025-11-30
+
+### Added
+- Support for some new REM keywords in parser.
+
 ### Fixed
-- Fixed metadata and URLs in `pyproject.toml`.
+- Metadata and URLs in `pyproject.toml`.
 - Improved formatting and clarity in `CHANGELOG.md`, added older versions.
+- Track index validation. Now, when INDEX 00 is greater than 0, everything works correctly.
 
 ## [1.0.0] - 2025-11-27
 
@@ -82,6 +88,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
 [Unreleased]: https://github.com/Olezhich/CueTools/compare/v1.0.0...main
+[1.0.1]: https://github.com/Olezhich/CueTools/compare/v1.0.1...v1.0.1
 [1.0.0]: https://github.com/Olezhich/CueTools/compare/v0.1.5...v1.0.0
 [0.1.5]: https://github.com/Olezhich/CueTools/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/Olezhich/CueTools/compare/v0.1.3...v0.1.4

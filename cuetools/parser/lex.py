@@ -14,8 +14,14 @@ class Token(Enum):
     REM = r'(REM)\b'
     GENRE = r'(GENRE)\b'
     DATE = r'(DATE)\b'
+
     REPLAYGAIN_ALBUM_GAIN = r'(REPLAYGAIN_ALBUM_GAIN)\b'
     REPLAYGAIN_ALBUM_PEAK = r'(REPLAYGAIN_ALBUM_PEAK)\b'
+    REPLAYGAIN_TRACK_GAIN = r'(REPLAYGAIN_TRACK_GAIN)\b'
+    REPLAYGAIN_TRACK_PEAK = r'(REPLAYGAIN_TRACK_PEAK)\b'
+
+    DISCID = r'(DISCID)\b'
+    COMMENT = r'(COMMENT)\b'
 
     TRACK = r'TRACK (\d\d+)\b'
     AUDIO = r'(AUDIO)\b'
