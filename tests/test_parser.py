@@ -56,6 +56,12 @@ class TestLoadStrict:
             == obj_sample_one_file_many_tracks_strict
         )
 
+    def test_real_cue(self, cue_sample_real: str):
+        res = cuetools.loads(cue_sample_real, strict_title_case=True)
+        assert res.performer == 'Scorpions', (
+            'Thats correct if it can parse the entire file without throwing an errors'
+        )
+
 
 def test_line_parsing():
     cue_sheet = """PERFORMER TITLE"""
@@ -111,5 +117,12 @@ def test_line_parsing():
     cue_sheet = """REM REPLAYGAIN_ALBUM_GAIN 5.44 dB
                     REM REPLAYGAIN_ALBUM_PEAK 0.987654"""
 
+    cue = cuetools.loads(cue_sheet)
+    logger.debug(cue)
+
+    cue_sheet = """FILE "track.flac" WAVE
+                    TRACK 01 AUDIO
+                    INDEX 00 00:00:50
+                    INDEX 01 00:00:65"""
     cue = cuetools.loads(cue_sheet)
     logger.debug(cue)

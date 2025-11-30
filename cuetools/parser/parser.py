@@ -142,6 +142,14 @@ def load_f_iter(cue: Iterator[str], strict_title_case: bool = False) -> AlbumDat
                                 raise CueValidationError(
                                     current_line, line, value.pos, value.lexeme, e
                                 )
+                        case Token.DISCID:
+                            ...
+                        case Token.COMMENT:
+                            ...
+                        case Token.REPLAYGAIN_TRACK_GAIN:
+                            ...
+                        case Token.REPLAYGAIN_TRACK_PEAK:
+                            ...
                         case _:
                             raise CueParseError(
                                 current_line,
@@ -168,7 +176,12 @@ def load_f_iter(cue: Iterator[str], strict_title_case: bool = False) -> AlbumDat
                             tokens[0].pos,
                         )
                     if current_track:
-                        album.add_track(current_track)
+                        try:
+                            album.add_track(current_track)
+                        except ValueError as e:
+                            raise CueValidationError(
+                                current_line, line, 0, 'Invalid previous track', e
+                            )
                     current_track = TrackData(
                         track=int(tokens[0].lexeme),
                         file=current_file[0],
@@ -195,6 +208,7 @@ def load_f_iter(cue: Iterator[str], strict_title_case: bool = False) -> AlbumDat
                         current_track.index00 = tokens[1].lexeme  # type: ignore[assignment]
                     elif index_type == 1:
                         current_track.index01 = tokens[1].lexeme  # type: ignore[assignment]
+                        print('INDEX WARN:: ', tokens[1].lexeme, current_track.index01)
                 case _:
                     raise CueParseError(
                         current_line,

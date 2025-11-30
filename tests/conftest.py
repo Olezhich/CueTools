@@ -232,71 +232,54 @@ def obj_sample_one_file_many_tracks() -> AlbumData:
 
 
 @pytest.fixture()
-def cue_sample_rem():
-    album = album_rem_gen(
-        genre='Hard Rock',
-        date='1969',
-        replaygain_album_gain='-4.10 db',
-        replaygain_album_peak='0.987654',
-    )
-    return '\n'.join(album)
-
-
-@pytest.fixture()
-def obj_sample_rem() -> AlbumData:
-    album = AlbumData(
-        rem=RemData(
-            genre='Hard Rock',
-            date=1969,
-            replaygain_album_gain='-4.10 db',  # type: ignore
-            replaygain_album_peak='0.987654',  # type: ignore
-        )
-    )
-    return album
-
-
-if __name__ == '__main__':
-    print('___album rem tests___')
-
-    print(album_rem_gen(genre='Rock', date='1969', comment='comment'))
-    print(
-        album_rem_gen(
-            genre=['Hard Rock', 'Progressive Rock', 'Rock'],
-            date='1969',
-            comment='comment',
-        )
-    )
-    print(album_rem_gen(quotes=True, genre='Rock', date='1969', comment='comment'))
-    print(
-        album_rem_gen(
-            quotes=True,
-            genre=['Hard Rock', 'Progressive Rock', 'Rock'],
-            date='1969',
-            comment='comment',
-        )
-    )
-
-    print('___album meta tests___')
-
-    print(album_meta_gen(performer='The Performer', title='The Title Of Album'))
-    print(
-        album_meta_gen(
-            quotes=True, performer='The Performer', title='The Title Of Album'
-        )
-    )
-
-    print('___another tests___')
-
-    print(track_gen('song.flac', 'song', 3))
-    print(track_gen('song 05.flac', 'song', 1))
-    print([track_gen(f'0{i} - Song 0{i}.flac', f'Song {i}') for i in range(1, 8)])
-
-    print('___cue_gen_test___')
-
-    cuesheet = album_rem_default() + album_meta_default()
-    cuesheet += [track_gen(f'0{i} - Song 0{i}.flac', f'Song {i}') for i in range(1, 8)]
-    # for i in cuesheet:
-    #     print(i.endswith('\n'), i)
-
-    # cuesheet = [i[-1:] if i.endswith('\n') else i for i in cuesheet]
-    print('\n'.join(cuesheet))
+def cue_sample_real() -> str:
+    return """REM GENRE Hard Rock
+REM DATE 1972
+REM DISCID 12345678
+REM COMMENT ExactAudioCopy v1.0b3
+PERFORMER "Scorpions"
+TITLE "Lonesome Crow"
+REM REPLAYGAIN_ALBUM_GAIN -7.99 dB
+REM REPLAYGAIN_ALBUM_PEAK 1.054599
+FILE "Scorpions - Lonesome Crow.flac" WAVE
+  TRACK 01 AUDIO
+    TITLE "I'm Going Mad"
+    REM REPLAYGAIN_TRACK_GAIN -7.97 dB
+    REM REPLAYGAIN_TRACK_PEAK 1.033902
+    INDEX 01 00:00:00
+  TRACK 02 AUDIO
+    TITLE "It All Depends"
+    REM REPLAYGAIN_TRACK_GAIN -8.17 dB
+    REM REPLAYGAIN_TRACK_PEAK 1.054599
+    INDEX 01 04:53:27
+  TRACK 03 AUDIO
+    TITLE "Leave Me"
+    REM REPLAYGAIN_TRACK_GAIN -8.56 dB
+    REM REPLAYGAIN_TRACK_PEAK 1.053317
+    INDEX 00 08:17:15
+    INDEX 01 08:18:42
+  TRACK 04 AUDIO
+    TITLE "In Search Of The Peace Of Mind"
+    REM REPLAYGAIN_TRACK_GAIN -6.73 dB
+    REM REPLAYGAIN_TRACK_PEAK 1.035224
+    INDEX 00 13:21:00
+    INDEX 01 13:22:52
+  TRACK 05 AUDIO
+    TITLE "Inheritance"
+    REM REPLAYGAIN_TRACK_GAIN -8.17 dB
+    REM REPLAYGAIN_TRACK_PEAK 1.038148
+    INDEX 00 18:16:10
+    INDEX 01 18:17:62
+  TRACK 06 AUDIO
+    TITLE "Action"
+    REM REPLAYGAIN_TRACK_GAIN -8.43 dB
+    REM REPLAYGAIN_TRACK_PEAK 1.031126
+    INDEX 00 22:55:50
+    INDEX 01 22:58:17
+  TRACK 07 AUDIO
+    TITLE "Lonesome Crow"
+    REM REPLAYGAIN_TRACK_GAIN -7.85 dB
+    REM REPLAYGAIN_TRACK_PEAK 1.042687
+    INDEX 00 26:51:00
+    INDEX 01 26:52:37
+"""

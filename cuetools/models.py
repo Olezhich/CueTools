@@ -1,6 +1,6 @@
 from __future__ import annotations
 from pathlib import Path
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field
 
 from cuetools.types import FrameTime, ReplayGainGain, ReplayGainPeak
 from cuetools.types.frame_time import FrameTimeCls
@@ -32,11 +32,9 @@ class TrackData(BaseModel):
         description="The index 01 (the beginning of the current track), corresponds to the line like *'INDEX 01 00:00:00'*",
     )
 
-    @model_validator(mode='after')
-    def validate_index(self) -> TrackData:
+    def validate_index(self) -> None:
         if self.index00 is not None and self.index00.frames > self.index01.frames:
             raise ValueError('Expected INDEX 00 <= INDEX 01')
-        return self
 
     def set_performer(self, performer: TitleCase) -> None:
         """Set track performer with a **Title Case** validation using `TitleCase` class consructor for string"""
@@ -80,6 +78,7 @@ class AlbumData(BaseModel):
     )
 
     def add_track(self, track: TrackData) -> None:
+        track.validate_index()
         self.tracks.append(track)
 
     def set_performer(self, performer: TitleCase) -> None:
