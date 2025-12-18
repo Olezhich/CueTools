@@ -32,6 +32,10 @@ class FrameTimeCls:
         ss = total // FRAMES_IN_SEC
         return f'{mm:02d}:{ss:02d}:{total % FRAMES_IN_SEC:02d}'
 
+    @property
+    def seconds(self) -> float:
+        return float(self.frames) / FRAMES_IN_SEC
+
     def __str__(self) -> str:
         return self.string
 
