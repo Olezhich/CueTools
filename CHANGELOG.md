@@ -5,6 +5,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.0.2] - 2025-12-18
+
+### Added
+- py.typed that should allow MyPy to correctly analyse custom types.
+- seconds property in the FrameTime.
+
+### Fixed
+- CHANGELOG versions diff link.
+
 ## [1.0.1] - 2025-11-30
 
 ### Added
@@ -87,8 +96,9 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Dataclasses for data models.
 
 
-[Unreleased]: https://github.com/Olezhich/CueTools/compare/v1.0.0...main
-[1.0.1]: https://github.com/Olezhich/CueTools/compare/v1.0.1...v1.0.1
+[Unreleased]: https://github.com/Olezhich/CueTools/compare/v1.0.2...main
+[1.0.2]: https://github.com/Olezhich/CueTools/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/Olezhich/CueTools/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Olezhich/CueTools/compare/v0.1.5...v1.0.0
 [0.1.5]: https://github.com/Olezhich/CueTools/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/Olezhich/CueTools/compare/v0.1.3...v0.1.4
