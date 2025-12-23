@@ -5,11 +5,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Removed
+- Index parsing stdout warning.
+
 ## [1.0.2] - 2025-12-18
 
 ### Added
-- py.typed that should allow MyPy to correctly analyse custom types.
-- seconds property in the FrameTime.
+- py.typed file that should allow MyPy to correctly analyse custom types.
+- Seconds property in the FrameTime.
 
 ### Fixed
 - CHANGELOG versions diff link.
