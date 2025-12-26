@@ -208,7 +208,6 @@ def load_f_iter(cue: Iterator[str], strict_title_case: bool = False) -> AlbumDat
                         current_track.index00 = tokens[1].lexeme  # type: ignore[assignment]
                     elif index_type == 1:
                         current_track.index01 = tokens[1].lexeme  # type: ignore[assignment]
-                        print('INDEX WARN:: ', tokens[1].lexeme, current_track.index01)
                 case _:
                     raise CueParseError(
                         current_line,

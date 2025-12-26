@@ -7,7 +7,7 @@ from cuetools.types.title_case import TitleCase
 
 
 def test_FrameTime():
-    track = TrackData(index00='01:50:05', index01=9000, file=Path('/'))  # type: ignore
+    track = TrackData(index00='01:50:05', index01=9000, file=Path('/'), track=1)  # type: ignore
     assert track.index00.frames == 8255, 'using string to FrameTime cast'  # type: ignore
     assert track.index01.string == '02:00:00', 'using int to FrameTime cast'
 

@@ -5,11 +5,19 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.0.3] - 2025-12-26
+
+### Removed
+- Index parsing stdout warning.
+
+### Changed
+- The track field type of TrackData from *int|None* to *int*, and now it is mandatory in the model. 
+
 ## [1.0.2] - 2025-12-18
 
 ### Added
-- py.typed that should allow MyPy to correctly analyse custom types.
-- seconds property in the FrameTime.
+- py.typed file that should allow MyPy to correctly analyse custom types.
+- Seconds property in the FrameTime.
 
 ### Fixed
 - CHANGELOG versions diff link.
@@ -96,7 +104,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Dataclasses for data models.
 
 
-[Unreleased]: https://github.com/Olezhich/CueTools/compare/v1.0.2...main
+[Unreleased]: https://github.com/Olezhich/CueTools/compare/v1.0.3...main
+[1.0.3]: https://github.com/Olezhich/CueTools/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Olezhich/CueTools/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Olezhich/CueTools/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Olezhich/CueTools/compare/v0.1.5...v1.0.0
