@@ -1,5 +1,5 @@
 from typing import Callable
-from cuetools.parser.errors import CueParseError
+from cuetools.parser.errors import CueParseError, CueValidationError
 from cuetools.parser.lex import Token, TokenMatch
 from cuetools.types.title_case import TitleCase
 
@@ -17,7 +17,10 @@ def title_case_handler(
     match value.type:
         case Token.ARG_QUOTES | Token.ARG:
             if strict:
-                dto_strict_setter(TitleCase(value.lexeme))
+                try:
+                    dto_strict_setter(TitleCase(value.lexeme))
+                except ValueError as e:
+                    raise CueValidationError(line_idx, line, value.pos, value.lexeme, e)
             else:
                 dto_setter(value.lexeme)
         case _:

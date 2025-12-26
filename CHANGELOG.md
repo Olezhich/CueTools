@@ -5,13 +5,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Fixed
+- Parsing of title case fields with the *strict_title_case* flag; now, when an error occurs, an `CueValidationError` is thrown instead of an `ValueError`.
+- `CHANGELOG.md` markup.
+
 ## [1.0.3] - 2025-12-26
 
 ### Removed
 - Index parsing stdout warning.
 
 ### Changed
-- The track field type of TrackData from *int|None* to *int*, and now it is mandatory in the model. 
+- The track field type of `TrackData` from *int|None* to *int*, and now it is mandatory in the model. 
 
 ## [1.0.2] - 2025-12-18
 
@@ -20,7 +24,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Seconds property in the FrameTime.
 
 ### Fixed
-- CHANGELOG versions diff link.
+- `CHANGELOG.md` versions diff link.
 
 ## [1.0.1] - 2025-11-30
 

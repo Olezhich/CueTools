@@ -4,7 +4,7 @@ import cuetools
 import logging
 
 from cuetools.models import AlbumData, RemData
-from cuetools.parser.errors import CueParseError
+from cuetools.parser.errors import CueParseError, CueValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +80,13 @@ def test_line_parsing():
     logger.debug(cue)
 
     assert cue == AlbumData(title='The Title Of Album', performer='The Performer')
+
+    # title_case_handler() should raise CueValidation Error
+    cue_sheet = """TITLE "The title of album""" ''
+
+    with pytest.raises(CueValidationError) as e:
+        cue = cuetools.loads(cue_sheet, strict_title_case=True)
+    logger.debug(str(e.value))
 
     cue_sheet = """FILE "The Title Of Album:::"!%^&" WAVE"""
     with pytest.raises(CueParseError) as e:
