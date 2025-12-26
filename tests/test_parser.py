@@ -126,3 +126,10 @@ def test_line_parsing():
                     INDEX 01 00:00:65"""
     cue = cuetools.loads(cue_sheet)
     logger.debug(cue)
+
+    cue_sheet = """FILE "track.flac" WAVE
+                    INDEX 00 00:00:50
+                    INDEX 01 00:00:65"""
+    with pytest.raises(cuetools.CueParseError) as e:
+        cuetools.loads(cue_sheet)
+    logger.debug(str(e.value))

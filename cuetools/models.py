@@ -17,8 +17,7 @@ class TrackData(BaseModel):
     file: Path = Field(
         description='Path to the audio file with this track (to flac, ape or etc.) relative to the cue sheet file',
     )
-    track: int | None = Field(
-        default=None,
+    track: int = Field(
         description="Track number, corresponds to the line like *'TRACK 01 AUDIO'*",
     )
     title: str | None = Field(default=None, description='Track title')
