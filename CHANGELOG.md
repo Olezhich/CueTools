@@ -5,6 +5,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## Added
+- `BaseRemData` class from which the corresponding classes for albums and tracks are inherited.
+- Full parsing of track replaygain fields.
+
+### Changed
+- Type of album rem data: `AlbumRemData` instead `RemData`.
+- Field names of the album replaygain on: `replaygain_gain` and `replaygain_peak` instead `replaygain_album_gain` and `replaygain_album_peak`.
+
 ### Fixed
 - Parsing of title case fields with the *strict_title_case* flag; now, when an error occurs, an `CueValidationError` is thrown instead of an `ValueError`.
 - `CHANGELOG.md` markup.

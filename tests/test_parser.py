@@ -61,6 +61,8 @@ class TestLoadStrict:
         assert res.performer == 'Scorpions', (
             'Thats correct if it can parse the entire file without throwing an errors'
         )
+        assert res.tracks[3].rem.replaygain_gain == -6.73
+        assert res.tracks[3].rem.replaygain_peak == 1.035224
 
 
 def test_line_parsing():
