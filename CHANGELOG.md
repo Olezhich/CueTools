@@ -5,6 +5,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-01-10
+
 ## Added
 - `BaseRemData` class from which the corresponding classes for albums and tracks are inherited.
 - Full parsing of track replaygain fields.
@@ -116,7 +118,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Dataclasses for data models.
 
 
-[Unreleased]: https://github.com/Olezhich/CueTools/compare/v1.0.3...main
+[Unreleased]: https://github.com/Olezhich/CueTools/compare/v1.1.0...main
+[1.1.0]: https://github.com/Olezhich/CueTools/compare/v1.0.3...v1.1.0
 [1.0.3]: https://github.com/Olezhich/CueTools/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Olezhich/CueTools/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Olezhich/CueTools/compare/v1.0.0...v1.0.1
