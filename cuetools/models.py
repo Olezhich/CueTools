@@ -7,6 +7,29 @@ from cuetools.types.frame_time import FrameTimeCls
 from cuetools.types.title_case import TitleCase
 
 
+class BaseRemData(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+
+    replaygain_gain: ReplayGainGain | None = Field(
+        default=None, description='Album replay gain, value format [-]a.bb dB'
+    )
+    replaygain_peak: ReplayGainPeak | None = Field(
+        default=None, description='Album peak, value format c.dddddd'
+    )
+
+
+class AlbumRemData(BaseRemData):
+    genre: str | None = Field(default=None, description='Album genre')
+    date: int | None = Field(default=None, description='Album release date')
+
+    def set_genre(self, genre: TitleCase) -> None:
+        """Set album genre with a Title Case validation using `TitleCase` class consructor for string"""
+        self.genre = genre
+
+
+class TrackRemData(BaseRemData): ...
+
+
 class TrackData(BaseModel):
     """Represents a single track within a CUE sheet.
 
@@ -22,6 +45,9 @@ class TrackData(BaseModel):
     )
     title: str | None = Field(default=None, description='Track title')
     performer: str | None = Field(default=None, description='Track performer')
+    rem: TrackRemData = Field(
+        default_factory=TrackRemData, description='Track additional rem meta'
+    )
     index00: FrameTime | None = Field(
         default=None,
         description="The index 00 (the end of the prev track), corresponds to the line like *'INDEX 00 00:00:00'*",
@@ -44,22 +70,6 @@ class TrackData(BaseModel):
         self.title = title
 
 
-class RemData(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    genre: str | None = Field(default=None, description='Album genre')
-    date: int | None = Field(default=None, description='Album release date')
-    replaygain_album_gain: ReplayGainGain | None = Field(
-        default=None, description='Album replay gain, value format [-]a.bb dB'
-    )
-    replaygain_album_peak: ReplayGainPeak | None = Field(
-        default=None, description='Album peak, value format c.dddddd'
-    )
-
-    def set_genre(self, genre: TitleCase) -> None:
-        """Set album genre with a Title Case validation using `TitleCase` class consructor for string"""
-        self.genre = genre
-
-
 class AlbumData(BaseModel):
     """Represents a parsed CUE sheet at the album level.
 
@@ -69,8 +79,8 @@ class AlbumData(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
     performer: str | None = Field(default=None, description='Album performer')
     title: str | None = Field(default=None, description='Album title')
-    rem: RemData = Field(
-        default_factory=RemData, description='Album additional rem meta'
+    rem: AlbumRemData = Field(
+        default_factory=AlbumRemData, description='Album additional rem meta'
     )
     tracks: list[TrackData] = Field(
         default_factory=list[TrackData], description='Track list of this album'

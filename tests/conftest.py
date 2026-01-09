@@ -4,7 +4,7 @@ from typing import Any
 
 import pytest
 from cuetools import AlbumData, TrackData
-from cuetools.models import RemData
+from cuetools.models import AlbumRemData
 
 TAB = 2
 
@@ -152,7 +152,7 @@ def obj_sample_one_file_one_track_default() -> AlbumData:
     album = AlbumData(
         performer='the performer',
         title='the title of album',
-        rem=RemData(genre='rock', date=1969),
+        rem=AlbumRemData(genre='rock', date=1969),
     )
     for i in range(1, 8):
         album.add_track(
@@ -166,7 +166,7 @@ def obj_sample_one_file_one_track_strict() -> AlbumData:
     album = AlbumData(
         performer='The Performer',
         title='The Title Of Album',
-        rem=RemData(genre='Rock', date=1969),
+        rem=AlbumRemData(genre='Rock', date=1969),
     )
     for i in range(1, 8):
         album.add_track(
@@ -183,7 +183,7 @@ def obj_sample_one_file_many_tracks_default() -> AlbumData:
     album = AlbumData(
         performer='the performer',
         title='the title of album',
-        rem=RemData(genre='rock', date=1969),
+        rem=AlbumRemData(genre='rock', date=1969),
     )
     for i in range(1, 8):
         album.add_track(
@@ -199,7 +199,7 @@ def obj_sample_one_file_many_tracks_strict() -> AlbumData:
     album = AlbumData(
         performer='The Performer',
         title='The Title Of Album',
-        rem=RemData(genre='Rock', date=1969),
+        rem=AlbumRemData(genre='Rock', date=1969),
     )
     for i in range(1, 8):
         album.add_track(
@@ -222,7 +222,7 @@ def obj_sample_one_file_many_tracks() -> AlbumData:
     album = AlbumData(
         performer='The Performer',
         title='The Title Of Album',
-        rem=RemData(genre='Rock', date=1969),
+        rem=AlbumRemData(genre='Rock', date=1969),
     )
     for i in range(1, 8):
         album.add_track(
