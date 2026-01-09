@@ -2,7 +2,7 @@ from pathlib import Path
 from pydantic import ValidationError
 import pytest
 from cuetools import TrackData
-from cuetools.models import AlbumData, RemData
+from cuetools.models import AlbumData, AlbumRemData
 from cuetools.types.title_case import TitleCase
 
 
@@ -22,41 +22,37 @@ def test_FrameTime():
 
 
 def test_ReplayGain_gain():
-    rem = RemData(replaygain_album_gain='17.84 dB')  # type: ignore
-    assert rem.replaygain_album_gain == 17.84, (
-        'using string to ReplayGain gain cast, >0 case'
-    )
-    rem = RemData(replaygain_album_gain='-17.84 dB')  # type: ignore
-    assert rem.replaygain_album_gain == -17.84, (
+    rem = AlbumRemData(replaygain_gain='17.84 dB')  # type: ignore
+    assert rem.replaygain_gain == 17.84, 'using string to ReplayGain gain cast, >0 case'
+    rem = AlbumRemData(replaygain_gain='-17.84 dB')  # type: ignore
+    assert rem.replaygain_gain == -17.84, (
         'using string to ReplayGain gain cast, <0 case'
     )
 
-    rem = RemData(replaygain_album_gain=17.84)  # type: ignore
-    assert rem.replaygain_album_gain == 17.84, (
-        'using float to ReplayGain gain cast, >0 case'
-    )
+    rem = AlbumRemData(replaygain_gain=17.84)  # type: ignore
+    assert rem.replaygain_gain == 17.84, 'using float to ReplayGain gain cast, >0 case'
 
     with pytest.raises(ValidationError):
-        RemData(replaygain_album_gain='7.8 dB')  # type: ignore
+        AlbumRemData(replaygain_gain='7.8 dB')  # type: ignore
 
     with pytest.raises(ValidationError):
-        RemData(replaygain_album_gain='0.824654')  # type: ignore
+        AlbumRemData(replaygain_gain='0.824654')  # type: ignore
 
 
 def test_ReplayGain_peak():
-    rem = RemData(replaygain_album_peak='0.987654')  # type: ignore
-    assert rem.replaygain_album_peak == 0.987654, (
+    rem = AlbumRemData(replaygain_peak='0.987654')  # type: ignore
+    assert rem.replaygain_peak == 0.987654, (
         'using string to ReplayGain peak cast, >0 case'
     )
 
     with pytest.raises(ValidationError):
-        RemData(replaygain_album_peak='0.0023')  # type: ignore
+        AlbumRemData(replaygain_peak='0.0023')  # type: ignore
 
     with pytest.raises(ValidationError):
-        RemData(replaygain_album_peak='0.0001112')  # type: ignore
+        AlbumRemData(replaygain_peak='0.0001112')  # type: ignore
 
     with pytest.raises(ValidationError):
-        RemData(replaygain_album_peak='-0.001122')  # type: ignore
+        AlbumRemData(replaygain_peak='-0.001122')  # type: ignore
 
 
 def test_TitleCase():

@@ -3,7 +3,7 @@ import cuetools
 
 import logging
 
-from cuetools.models import AlbumData, RemData
+from cuetools.models import AlbumData, AlbumRemData
 from cuetools.parser.errors import CueParseError, CueValidationError
 
 logger = logging.getLogger(__name__)
@@ -61,6 +61,8 @@ class TestLoadStrict:
         assert res.performer == 'Scorpions', (
             'Thats correct if it can parse the entire file without throwing an errors'
         )
+        assert res.tracks[3].rem.replaygain_gain == -6.73
+        assert res.tracks[3].rem.replaygain_peak == 1.035224
 
 
 def test_line_parsing():
@@ -114,7 +116,7 @@ def test_line_parsing():
     cue = cuetools.loads(cue_sheet)
     logger.debug(cue)
 
-    assert cue == AlbumData(rem=RemData(genre='Blues', date=1969))
+    assert cue == AlbumData(rem=AlbumRemData(genre='Blues', date=1969))
 
     cue_sheet = """REM REPLAYGAIN_ALBUM_GAIN 12.5"""
     with pytest.raises(cuetools.CueValidationError) as e:

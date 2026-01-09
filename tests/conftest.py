@@ -4,13 +4,18 @@ from typing import Any
 
 import pytest
 from cuetools import AlbumData, TrackData
-from cuetools.models import RemData
+from cuetools.models import AlbumRemData, TrackRemData
 
 TAB = 2
 
 
 def track_gen(
-    filename: str, songname: str, tracks_count: int = 1, tab: int = TAB
+    filename: str,
+    songname: str,
+    gain: float,
+    peak: float,
+    tracks_count: int = 1,
+    tab: int = TAB,
 ) -> str:
     out = f'''FILE "{filename}" {'WAVE' if filename.endswith('.flac') else ''}\n'''
     filename = filename.split('.')[0]
@@ -23,6 +28,8 @@ def track_gen(
         s = '0' + s if len(s) < 2 else s
         out += f'''{' ' * tab}TRACK {s} AUDIO
 {' ' * 2 * tab}TITLE "{songname}"
+{' ' * 2 * tab}REM REPLAYGAIN_TRACK_GAIN {gain:.2f} dB
+{' ' * 2 * tab}REM REPLAYGAIN_TRACK_PEAK {peak:.6f}
 {' ' * 2 * tab}INDEX 01 00:00:00\n'''
         suf += 1
     if out.endswith('\n'):
@@ -88,12 +95,16 @@ def album_rem_strict(request: Any) -> list[str]:
 
 @pytest.fixture()
 def album_tracks_default() -> list[str]:
-    return [track_gen(f'0{i} - Song 0{i}.flac', f'song {i}') for i in range(1, 8)]
+    return [
+        track_gen(f'0{i} - Song 0{i}.flac', f'song {i}', 10.0, 0.9) for i in range(1, 8)
+    ]
 
 
 @pytest.fixture()
 def album_tracks_strict() -> list[str]:
-    return [track_gen(f'0{i} - Song 0{i}.flac', f'Song {i}') for i in range(1, 8)]
+    return [
+        track_gen(f'0{i} - Song 0{i}.flac', f'Song {i}', 10.0, 0.9) for i in range(1, 8)
+    ]
 
 
 # Cues
@@ -129,7 +140,7 @@ def cue_sample_one_file_many_tracks_default(
     album_meta_default: list[str], album_rem_default: list[str]
 ) -> str:
     cuesheet = album_meta_default + album_rem_default
-    cuesheet += [track_gen('The Title Of Album.flac', 'track title', 7)]
+    cuesheet += [track_gen('The Title Of Album.flac', 'track title', 10.0, 0.9, 7)]
     return '\n'.join(cuesheet)
 
 
@@ -138,7 +149,7 @@ def cue_sample_one_file_many_tracks_strict(
     album_meta_strict: list[str], album_rem_strict: list[str]
 ) -> str:
     cuesheet = album_meta_strict + album_rem_strict
-    cuesheet += [track_gen('The Title Of Album.flac', 'Track Title', 7)]
+    cuesheet += [track_gen('The Title Of Album.flac', 'Track Title', 10.0, 0.9, 7)]
     return '\n'.join(cuesheet)
 
 
@@ -152,11 +163,16 @@ def obj_sample_one_file_one_track_default() -> AlbumData:
     album = AlbumData(
         performer='the performer',
         title='the title of album',
-        rem=RemData(genre='rock', date=1969),
+        rem=AlbumRemData(genre='rock', date=1969),
     )
     for i in range(1, 8):
         album.add_track(
-            TrackData(track=i, title=f'song {i}', file=Path(f'0{i} - Song 0{i}.flac'))
+            TrackData(
+                track=i,
+                title=f'song {i}',
+                file=Path(f'0{i} - Song 0{i}.flac'),
+                rem=TrackRemData(replaygain_gain=10.0, replaygain_peak=0.9),
+            )
         )
     return album
 
@@ -166,11 +182,16 @@ def obj_sample_one_file_one_track_strict() -> AlbumData:
     album = AlbumData(
         performer='The Performer',
         title='The Title Of Album',
-        rem=RemData(genre='Rock', date=1969),
+        rem=AlbumRemData(genre='Rock', date=1969),
     )
     for i in range(1, 8):
         album.add_track(
-            TrackData(track=i, title=f'Song {i}', file=Path(f'0{i} - Song 0{i}.flac'))
+            TrackData(
+                track=i,
+                title=f'Song {i}',
+                file=Path(f'0{i} - Song 0{i}.flac'),
+                rem=TrackRemData(replaygain_gain=10.0, replaygain_peak=0.9),
+            )
         )
     return album
 
@@ -183,12 +204,15 @@ def obj_sample_one_file_many_tracks_default() -> AlbumData:
     album = AlbumData(
         performer='the performer',
         title='the title of album',
-        rem=RemData(genre='rock', date=1969),
+        rem=AlbumRemData(genre='rock', date=1969),
     )
     for i in range(1, 8):
         album.add_track(
             TrackData(
-                track=i, title='track title', file=Path('The Title Of Album.flac')
+                track=i,
+                title='track title',
+                file=Path('The Title Of Album.flac'),
+                rem=TrackRemData(replaygain_gain=10.0, replaygain_peak=0.9),
             )
         )
     return album
@@ -199,12 +223,15 @@ def obj_sample_one_file_many_tracks_strict() -> AlbumData:
     album = AlbumData(
         performer='The Performer',
         title='The Title Of Album',
-        rem=RemData(genre='Rock', date=1969),
+        rem=AlbumRemData(genre='Rock', date=1969),
     )
     for i in range(1, 8):
         album.add_track(
             TrackData(
-                track=i, title='Track Title', file=Path('The Title Of Album.flac')
+                track=i,
+                title='Track Title',
+                file=Path('The Title Of Album.flac'),
+                rem=TrackRemData(replaygain_gain=10.0, replaygain_peak=0.9),
             )
         )
     return album
@@ -213,7 +240,7 @@ def obj_sample_one_file_many_tracks_strict() -> AlbumData:
 @pytest.fixture()
 def cue_sample_one_file_many_tracks() -> str:
     cuesheet = album_rem_default() + album_meta_default()
-    cuesheet += [track_gen('The Title Of Album.flac', 'song_name', 7)]
+    cuesheet += [track_gen('The Title Of Album.flac', 'song_name', 10.0, 0.9, 7)]
     return '\n'.join(cuesheet)
 
 
@@ -222,11 +249,16 @@ def obj_sample_one_file_many_tracks() -> AlbumData:
     album = AlbumData(
         performer='The Performer',
         title='The Title Of Album',
-        rem=RemData(genre='Rock', date=1969),
+        rem=AlbumRemData(genre='Rock', date=1969),
     )
     for i in range(1, 8):
         album.add_track(
-            TrackData(track=i, title='song_name', file=Path('The Title Of Album.flac'))
+            TrackData(
+                track=i,
+                title='song_name',
+                file=Path('The Title Of Album.flac'),
+                rem=TrackRemData(replaygain_gain=10.0, replaygain_peak=0.9),
+            )
         )
     return album
 

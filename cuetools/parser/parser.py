@@ -130,14 +130,44 @@ def load_f_iter(cue: Iterator[str], strict_title_case: bool = False) -> AlbumDat
                                 )
                         case Token.REPLAYGAIN_ALBUM_GAIN:
                             try:
-                                album.rem.replaygain_album_gain = value.lexeme  # type: ignore[assignment]
+                                album.rem.replaygain_gain = value.lexeme  # type: ignore[assignment]
                             except ValueError as e:
                                 raise CueValidationError(
                                     current_line, line, value.pos, value.lexeme, e
                                 )
                         case Token.REPLAYGAIN_ALBUM_PEAK:
                             try:
-                                album.rem.replaygain_album_peak = value.lexeme  # type: ignore[assignment]
+                                album.rem.replaygain_peak = value.lexeme  # type: ignore[assignment]
+                            except ValueError as e:
+                                raise CueValidationError(
+                                    current_line, line, value.pos, value.lexeme, e
+                                )
+                        case Token.REPLAYGAIN_TRACK_GAIN:
+                            if not current_track:
+                                raise CueParseError(
+                                    current_line,
+                                    line,
+                                    'any TRACK tag before',
+                                    tokens[0].lexeme,
+                                    tokens[1].pos,
+                                )
+                            try:
+                                current_track.rem.replaygain_gain = value.lexeme  # type: ignore[assignment]
+                            except ValueError as e:
+                                raise CueValidationError(
+                                    current_line, line, value.pos, value.lexeme, e
+                                )
+                        case Token.REPLAYGAIN_TRACK_PEAK:
+                            if not current_track:
+                                raise CueParseError(
+                                    current_line,
+                                    line,
+                                    'any TRACK tag before',
+                                    tokens[0].lexeme,
+                                    tokens[1].pos,
+                                )
+                            try:
+                                current_track.rem.replaygain_peak = value.lexeme  # type: ignore[assignment]
                             except ValueError as e:
                                 raise CueValidationError(
                                     current_line, line, value.pos, value.lexeme, e
@@ -145,10 +175,6 @@ def load_f_iter(cue: Iterator[str], strict_title_case: bool = False) -> AlbumDat
                         case Token.DISCID:
                             ...
                         case Token.COMMENT:
-                            ...
-                        case Token.REPLAYGAIN_TRACK_GAIN:
-                            ...
-                        case Token.REPLAYGAIN_TRACK_PEAK:
                             ...
                         case _:
                             raise CueParseError(
