@@ -32,6 +32,9 @@ def test_ReplayGain_gain():
     rem = AlbumRemData(replaygain_gain=17.84)  # type: ignore
     assert rem.replaygain_gain == 17.84, 'using float to ReplayGain gain cast, >0 case'
 
+    rem = AlbumRemData(replaygain_gain='+1.23 dB')  # type: ignore
+    assert rem.replaygain_gain == 1.23, 'check [+-]a.bb dB pattern'
+
     with pytest.raises(ValidationError):
         AlbumRemData(replaygain_gain='7.8 dB')  # type: ignore
 
