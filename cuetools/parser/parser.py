@@ -107,6 +107,10 @@ def load_f_iter(cue: Iterator[str], strict_title_case: bool = False) -> AlbumDat
                                 filepath.lexeme,
                                 filepath.pos,
                             )
+                case Token.ISRC:
+                    ...
+                case Token.PREGAP:
+                    ...
                 case Token.REM:
                     rem_type = tokens[1]
                     value = tokens[2]
@@ -175,6 +179,8 @@ def load_f_iter(cue: Iterator[str], strict_title_case: bool = False) -> AlbumDat
                         case Token.DISCID:
                             ...
                         case Token.COMMENT:
+                            ...
+                        case Token.COMPOSER:
                             ...
                         case _:
                             raise CueParseError(

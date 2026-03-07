@@ -131,6 +131,8 @@ def test_line_parsing():
 
     cue_sheet = """FILE "track.flac" WAVE
                     TRACK 01 AUDIO
+                    ISRC GBAYE1001378
+                    REM COMPOSER ""
                     INDEX 00 00:00:50
                     INDEX 01 00:00:65"""
     cue = cuetools.loads(cue_sheet)
