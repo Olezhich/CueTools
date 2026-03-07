@@ -22,10 +22,14 @@ class Token(Enum):
 
     DISCID = r'(DISCID)\b'
     COMMENT = r'(COMMENT)\b'
+    COMPOSER = r'(COMPOSER)\b'
 
     TRACK = r'TRACK (\d\d+)\b'
     AUDIO = r'(AUDIO)\b'
     INDEX = r'INDEX (\d\d)\b'
+
+    ISRC = r'(ISRC)\b'
+    PREGAP = r'(PREGAP)\b'
 
     ARG_QUOTES = r'"(.*)"'
     ARG = r'(.*)'
