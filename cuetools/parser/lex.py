@@ -30,6 +30,8 @@ class Token(Enum):
 
     ISRC = r'(ISRC)\b'
     PREGAP = r'(PREGAP)\b'
+    CATALOG = r'(CATALOG)\b'
+    FLAGS = r'(FLAGS)\b'
 
     ARG_QUOTES = r'"(.*)"'
     ARG = r'(.*)'

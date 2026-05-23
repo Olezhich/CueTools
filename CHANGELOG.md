@@ -5,6 +5,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-05-23
+
+### Added
+- Support for *CATALOG* and *FLAGS* keywords without parsing their values.
+
 ## [1.1.1] - 2026-03-07
 
 ### Added
@@ -124,7 +129,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Dataclasses for data models.
 
 
-[Unreleased]: https://github.com/Olezhich/CueTools/compare/v1.1.1...main
+[Unreleased]: https://github.com/Olezhich/CueTools/compare/v1.1.2...main
+[1.1.2]: https://github.com/Olezhich/CueTools/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/Olezhich/CueTools/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Olezhich/CueTools/compare/v1.0.3...v1.1.0
 [1.0.3]: https://github.com/Olezhich/CueTools/compare/v1.0.2...v1.0.3
